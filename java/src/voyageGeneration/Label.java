@@ -4,24 +4,30 @@ public class Label {
 	private double cost;
 	private int departureTime;
 	private Installation currentInstallation;
+	private int[] visited;
 		
-
+	public Label(double cost, int departureTime, Installation currentInstallation, int[] visited) {
+		this.cost = cost;
+		this.departureTime = departureTime;
+		this.currentInstallation = currentInstallation;
+		this.visited = visited;
+	}
+	
+	
 	public double getCost() {
 		return cost;
 	}
-	public void setCost(double cost) {
-		this.cost = cost;
-	}
+
 	public int getDepartureTime() {
 		return departureTime;
 	}
-	public void setDepartureTime(int departureTime) {
-		this.departureTime = departureTime;
-	}
+
 	public Installation getCurrentInstallation() {
 		return currentInstallation;
 	}
-	public void setCurrentInstallation(Installation currentInstallation) {
-		this.currentInstallation = currentInstallation;
+
+	public int[] getVisited() {
+		return visited;
 	}
+	
 }
