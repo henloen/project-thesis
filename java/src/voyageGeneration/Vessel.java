@@ -4,6 +4,20 @@ public class Vessel {
 	private String name;
 	private int capacity, speed, unitFuelCost;
 	private double fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation;
+	
+	
+
+	public Vessel(String name, int capacity, int speed, int unitFuelCost,
+			double fuelConsumptionSailing, double fuelConsumptionDepot,
+			double fuelConsumptionInstallation) {
+		this.name = name;
+		this.capacity = capacity;
+		this.speed = speed;
+		this.unitFuelCost = unitFuelCost;
+		this.fuelConsumptionSailing = fuelConsumptionSailing;
+		this.fuelConsumptionDepot = fuelConsumptionDepot;
+		this.fuelConsumptionInstallation = fuelConsumptionInstallation;
+	}
 
 	public String getName() {
 		return name;

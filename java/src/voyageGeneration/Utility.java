@@ -3,11 +3,9 @@ package voyageGeneration;
 public class Utility {
 	
 	private static double[][] distances = {
-			{1,2,3,4,5},
-			{1,2,3,4,5},
-			{1,2,3,4,5},
-			{1,2,3,4,5},
-			{1,2,3,4,5}
+			{0,1,3},
+			{1,0,2},
+			{3,2,0}
 			};
 	
 	public static double getDistance(Installation i1, Installation i2) {
