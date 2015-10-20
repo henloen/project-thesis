@@ -1,0 +1,75 @@
+	private static String[][] installationsData = {
+			{"FMO","8","16","0","11","8"},
+			{"1","0","16","2","1","8"},
+			{"2","0","24","3","1","8"},
+			{"3","0","24","4","1","8"},
+			};
+	
+	// Each row consists of name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumtionDepot, fuelConsumptionInstallation
+	private static String[][] vesselsData = {
+		{"FarSeeker", "10", "1", "1", "2", "0", "1"}
+		};
+		
+		
+		
+		
+		
+		Unexplored labels:[1]
+Explored labels: []
+Extending from label 1 to label 2
+Extending from label 1 to label 3
+Extending from label 1 to label 4
+Unexplored labels:[2, 3, 4]
+Explored labels: [1]
+Extending from label 2 to label 5
+Extending from label 2 to label 6
+Unexplored labels:[3, 4, 5, 6]
+Explored labels: [1, 2]
+Extending from label 3 to label 7
+Extending from label 3 to label 8
+Unexplored labels:[4, 5, 6, 7, 8]
+Explored labels: [1, 2, 3]
+Extending from label 4 to label 9
+Extending from label 4 to label 10
+Unexplored labels:[5, 6, 7, 8, 9, 10]
+Explored labels: [1, 2, 3, 4]
+Extending from label 5 to label 11
+Unexplored labels:[6, 7, 8, 9, 10, 11]
+Explored labels: [1, 2, 3, 4, 5]
+Extending from label 6 to label 12
+Unexplored labels:[7, 8, 9, 10, 11, 12]
+Explored labels: [1, 2, 3, 4, 5, 6]
+Extending from label 7 to label 13
+Dominator: number: 13, cost: 38.0, capacityUsed: 9.0, departureTime: 47, currentInstallation: 3, visited: 0213
+Dominated: number: 11, cost: 41.0, capacityUsed: 9.0, departureTime: 52, currentInstallation: 3, visited: 0123
+Unexplored labels:[8, 9, 10, 12, 13]
+Explored labels: [1, 2, 3, 4, 5, 6, 7]
+Extending from label 8 to label 14
+Unexplored labels:[9, 10, 12, 13, 14]
+Explored labels: [1, 2, 3, 4, 5, 6, 7, 8]
+Extending from label 9 to label 15
+Dominator: number: 15, cost: 36.0, capacityUsed: 9.0, departureTime: 46, currentInstallation: 2, visited: 0312
+Dominated: number: 12, cost: 43.0, capacityUsed: 9.0, departureTime: 53, currentInstallation: 2, visited: 0132
+Unexplored labels:[10, 13, 14, 15]
+Explored labels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+Extending from label 10 to label 16
+Dominator: number: 16, cost: 42.0, capacityUsed: 9.0, departureTime: 53, currentInstallation: 1, visited: 0321
+Dominated: number: 14, cost: 46.0, capacityUsed: 9.0, departureTime: 55, currentInstallation: 1, visited: 0231
+Unexplored labels:[13, 15, 16]
+Explored labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Extending from label 13 to label 17(depot)
+Arrival time at depot: 48
+Unexplored labels:[15, 16]
+Explored labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 13]
+Extending from label 15 to label 18(depot)
+Arrival time at depot: 48
+Dominator: number: 17, cost: 40.0, capacityUsed: 9.0, departureTime: 56, currentInstallation: 0, visited: 0213
+Dominated: number: 18, cost: 40.0, capacityUsed: 9.0, departureTime: 56, currentInstallation: 0, visited: 0312
+Unexplored labels:[16]
+Explored labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 13, 15]
+Extending from label 16 to label 19(depot)
+Arrival time at depot: 54
+Dominator: number: 17, cost: 40.0, capacityUsed: 9.0, departureTime: 56, currentInstallation: 0, visited: 0213
+Dominated: number: 19, cost: 44.0, capacityUsed: 9.0, departureTime: 56, currentInstallation: 0, visited: 0321
+------------------------------------------------------------------------------------------------------------------------
+Cheapest voyage label: number: 17, cost: 40.0, capacityUsed: 9.0, departureTime: 56, currentInstallation: 0, visited: 0213

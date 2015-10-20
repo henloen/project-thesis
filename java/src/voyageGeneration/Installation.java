@@ -3,10 +3,11 @@ package voyageGeneration;
 public class Installation {
 	
 	private String name;
-	private int serviceTime, openingHour, closingHour, number, demand, frequency;
+	private int number, demand, frequency;
+	private double openingHour, closingHour, serviceTime;
 	
-	public Installation(String name, int openingHour,
-			int closingHour, int demand, int frequency, int serviceTime, int number) {
+	public Installation(String name, double openingHour,
+			double closingHour, int demand, int frequency, double serviceTime, int number) {
 		this.name = name;
 		this.serviceTime = serviceTime;
 		this.openingHour = openingHour;
@@ -32,16 +33,16 @@ public class Installation {
 		return frequency;
 	}
 
-	public int getServiceTime() {
+	public double getServiceTime() {
 		return serviceTime;
 	}
 
-	public int getOpeningHour() {
+	public double getOpeningHour() {
 		return openingHour;
 	}
 
 
-	public int getClosingHour() {
+	public double getClosingHour() {
 		return closingHour;
 	}
 
@@ -49,20 +50,18 @@ public class Installation {
 		return number;
 	}
 	
-	public int getTodaysOpeningHour(int time) {
-//		System.out.println(Math.ceil((time/24.0)));
-		int day = (int) Math.ceil(time/24.0);
-//		System.out.println("Time: " + time);
-//		System.out.println("Day: " + day);
-		int res = (day-1)*24 + openingHour;
-//		System.out.println("OpeningHourAbsolute: " + res);
-		return res;
+	public double getTodaysOpeningHour(double time) {
+		double day = Math.ceil(time/24);
+		return  (day-1)*24 + openingHour;
 	}
 	
-	public int getTodaysClosingHour(int time) {
-		int day = (int) Math.ceil(time/24.0);
+	public double getTodaysClosingHour(double time) {
+		double day = Math.ceil(time/24.0);
 		return (day-1)*24 + closingHour;
-
+	}
+	
+	public String toString() {
+		return ""+number;
 	}
 
 }

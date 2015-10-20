@@ -10,10 +10,12 @@ public class Generator {
 	private int[] installationNumbers;
 	private Vessel vessel;
 	private int maxDuration;
+	private double[][] distances;
 
-	public Generator(Installation[] installationSubset, Vessel vessel, int maxDuration) {
+	public Generator(Installation[] installationSubset, Vessel vessel, double[][] distances, int maxDuration) {
 		this.vessel = vessel;
 		this.maxDuration = maxDuration;
+		this.distances = distances;
 		unexploredLabels= new ArrayList<Label>();
 		exploredLabels= new ArrayList<Label>();
 		this.installationSubset = installationSubset;
@@ -27,6 +29,7 @@ public class Generator {
 
 	public Label findCheapestVoyage() {
 		while(! unexploredLabels.isEmpty()) {
+			printLabels();
 			extendLabel(unexploredLabels.get(0));
 		}
 		Label cheapestLabel = null;
@@ -50,7 +53,7 @@ public class Generator {
 		if (possibleInstallations.isEmpty()){
 			Label newLabel = extendLabelToDepot(currentLabel);
 			if (! (newLabel == null)) {
-				dominateLabels(newLabel);
+				dominateDepotLabels(newLabel);
 			}
 		}
 		else{
@@ -70,12 +73,12 @@ public class Generator {
 		Installation currentInstallation = currentLabel.getCurrentInstallation();
 		Installation depot = installationSubset[0];
 		Label newLabel;
-		int currentDepartureTime = currentLabel.getDepartureTime();
+		double currentDepartureTime = currentLabel.getDepartureTime();
 		double currentCost = currentLabel.getCost();
-		int sailingTime = (int) Math.ceil((Utility.getDistance(currentInstallation, depot)/vessel.getSpeed()));
-		int arrivalTime = currentDepartureTime + sailingTime;
-		int todaysOpeningHour = depot.getTodaysOpeningHour(arrivalTime);
-		int timeVoyageFinished;
+		double sailingTime = Math.ceil((getDistance(currentInstallation, depot)/vessel.getSpeed()));
+		double arrivalTime = currentDepartureTime + sailingTime;
+		double todaysOpeningHour = depot.getTodaysOpeningHour(arrivalTime);
+		double timeVoyageFinished;
 		if (arrivalTime <= todaysOpeningHour) {
 			timeVoyageFinished = todaysOpeningHour;
 		}
@@ -89,6 +92,8 @@ public class Generator {
 		else {
 			newLabel = null;
 		}
+		System.out.println("Extending from label " + currentLabel + " to label " + newLabel + "(depot)");
+		System.out.println("Arrival time at depot: " + arrivalTime);
 		return newLabel;
 		
 	}
@@ -96,16 +101,14 @@ public class Generator {
 	private Label extendLabelToInstallation(Label currentLabel, Installation nextInstallation) {
 		Installation currentInstallation = currentLabel.getCurrentInstallation();
 		Label newLabel;
-		int currentDepartureTime = currentLabel.getDepartureTime();
+		double currentDepartureTime = currentLabel.getDepartureTime();
 		double currentCost = currentLabel.getCost();
-		int sailingTime = (int) Math.ceil((Utility.getDistance(currentInstallation, nextInstallation)/vessel.getSpeed()));
-		int arrivalTime = currentDepartureTime + sailingTime;
-		int todaysOpeningHour = nextInstallation.getTodaysOpeningHour(arrivalTime);
-		System.out.println("Extending from installation " + currentInstallation.getName() + " to " + nextInstallation.getName());
-		int todaysClosingHour = nextInstallation.getTodaysClosingHour(arrivalTime);
-//		System.out.println(todaysClosingHour);
-		int waitingTime = 0;
-		int tomorrowsOpeningHour = todaysOpeningHour+24; //assumes same opening hours every day
+		double sailingTime = Math.ceil((getDistance(currentInstallation, nextInstallation)/vessel.getSpeed()));
+		double arrivalTime = currentDepartureTime + sailingTime;
+		double todaysOpeningHour = nextInstallation.getTodaysOpeningHour(arrivalTime);
+		double todaysClosingHour = nextInstallation.getTodaysClosingHour(arrivalTime);
+		double waitingTime = 0;
+		double tomorrowsOpeningHour = todaysOpeningHour+24; //assumes same opening hours every day
 		if (arrivalTime < todaysOpeningHour) {
 			waitingTime = todaysOpeningHour - arrivalTime;
 		}
@@ -116,7 +119,7 @@ public class Generator {
 		else if (arrivalTime + nextInstallation.getServiceTime() > todaysClosingHour) {
 			waitingTime = tomorrowsOpeningHour - todaysClosingHour; //add a night
 		}
-		int nextDepartureTime = arrivalTime + nextInstallation.getServiceTime() + waitingTime;
+		double nextDepartureTime = arrivalTime + nextInstallation.getServiceTime() + waitingTime;
 		double capacityUsed = currentLabel.getCapacityUsed();
 		double nextCapacityUsed = capacityUsed + nextInstallation.getDemandPerVisit();
 		//check that the solution is feasible
@@ -127,38 +130,59 @@ public class Generator {
 		else {
 			newLabel = null;
 		}
-
-//		System.out.println("waiting time:" + waitingTime);
-//		System.out.println("arrivalTime:" + arrivalTime);
-//		System.out.println("todaysClosingHour:" + todaysClosingHour);
-//		System.out.println("tommorrowsOpeningHour:" + tomorrowsOpeningHour);
+		System.out.println("Extending from label " + currentLabel + " to label " + newLabel);
 		return newLabel;
 	}
 	
 	private void dominateLabels(Label newLabel) {
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(unexploredLabel,newLabel)){
+				printDominatedLabel(unexploredLabel,newLabel); 
 				return;
 			}
 		}
 		for (Label exploredLabel: exploredLabels) {
 			if (dominates(exploredLabel,newLabel)){
+				printDominatedLabel(exploredLabel,newLabel);
 				return;
 			}
 		}
 		//add the label to the list of unexplored labels if it's not dominated by any existing labels
 		unexploredLabels.add(newLabel);
+		ArrayList<Label> removeUnexploredLabels = new ArrayList<Label>();
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(newLabel, unexploredLabel)){
-				unexploredLabels.remove(unexploredLabel);
+				printDominatedLabel(newLabel,unexploredLabel);
+				removeUnexploredLabels.add(unexploredLabel);
 			}
 		}
+		unexploredLabels.removeAll(removeUnexploredLabels);
+		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
 		for (Label exploredLabel : exploredLabels) {
 			if (dominates(newLabel, exploredLabel)){
-				exploredLabels.remove(exploredLabel);
+				printDominatedLabel(newLabel,exploredLabel);
+				removeExploredLabels.add(exploredLabel);
 			} 
 		}
-		
+		exploredLabels.removeAll(removeExploredLabels);
+	}
+	
+	private void dominateDepotLabels(Label newLabel) {
+		for (Label exploredLabel: exploredLabels) {
+			if (dominatesDepot(exploredLabel,newLabel)){
+				printDominatedLabel(exploredLabel,newLabel);
+				return;
+			}
+		}
+		exploredLabels.add(newLabel);
+		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
+		for (Label exploredLabel : exploredLabels) {
+			if (dominatesDepot(newLabel, exploredLabel)){
+				printDominatedLabel(newLabel,exploredLabel);
+				removeExploredLabels.add(exploredLabel);
+			} 
+		}
+		exploredLabels.removeAll(removeExploredLabels);
 	}
 	
 	//true if label1 dominates label2
@@ -171,6 +195,19 @@ public class Generator {
 				&& visitedSameInstallations(label1,label2)
 				&& label1.getCost() <= label2.getCost()
 				&& label1.getDepartureTime() <= label2.getDepartureTime()) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean dominatesDepot (Label label1, Label label2) {
+		//a label can't dominate itself
+		if (label1 == label2) {
+			return false;
+		}
+		if (label1.getCurrentInstallation() == label2.getCurrentInstallation()
+				&& visitedSameInstallations(label1,label2)
+				&& label1.getCost() <= label2.getCost()){
 			return true;
 		}
 		return false;
@@ -218,5 +255,19 @@ public class Generator {
 		for (int i=0;i<installationSubset.length;i++) {
 			installationNumbers[i] = installationSubset[i].getNumber();
 		}
+	}
+	
+	private void printLabels() {
+		System.out.println("Unexplored labels:" + unexploredLabels);
+		System.out.println("Explored labels: " + exploredLabels);
+	}
+	
+	private void printDominatedLabel(Label label1, Label label2) {
+		System.out.println("Dominator: " + label1.getFullText());
+		System.out.println("Dominated: " + label2.getFullText());
+	}
+	
+	private double getDistance(Installation i1, Installation i2) {
+		return distances[i1.getNumber()][i2.getNumber()];
 	}
 }
