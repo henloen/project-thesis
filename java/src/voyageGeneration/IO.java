@@ -10,7 +10,12 @@ public class IO {
 	private int numberOfInstallations, numberOfInstallationAttributes, numberOfVessels, numberOfVesselAttributes;
 	private String[][] installationsData;//each row consists of name, openingHour, closingHour, demand, frequency, serviceTime
 	private String[][] vesselsData;//each row consists of name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumtionDepot, fuelConsumptionInstallation
-	private String[][] distancesData;//corresponds to the distance matrix 
+	private String[][] distancesData;//corresponds to the distance matrix.
+	
+	/*note that it's assumed that the distance matrix is fully dense, i.e. you can't send in the
+	 *  installation subset 1,2 and 4 because it would load the distances for 1, 2 and 3.
+	 *  This can be fixed by editing getDistancesData(), but is not implemented at the moment
+	 */
 	
 
 	public IO(int numberOfInstallations, int numberOfInstallationAttributes,

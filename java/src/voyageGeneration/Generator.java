@@ -21,8 +21,8 @@ public class Generator {
 		this.installationSubset = installationSubset;
 		int[] visited = new int[installationSubset.length]; // initial list of visited installations, the index represents the sequence of visits
 		Arrays.fill(visited, -1);
-		visited[0] = 0;
-		Label initLabel = new Label(0, 16,0, installationSubset[0],visited); //first and last installation in the installationSet is the depot
+		visited[0] = 0;//mark depot as visited
+		Label initLabel = new Label(0, 16,0, installationSubset[0],visited); //first installation in the installationSet is the depot
 		unexploredLabels.add(initLabel);
 		createInstallationNumbers();
 	}
