@@ -1,6 +1,6 @@
 package voyageGeneration;
 
-public class Vessel {
+public class Vessel implements Comparable<Vessel>{
 	private String name;
 	private int capacity, speed, unitFuelCost;
 	private double fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation;
@@ -41,6 +41,10 @@ public class Vessel {
 
 	public double getFuelCostInstallation() {
 		return fuelConsumptionInstallation*unitFuelCost;
-	}	
+	}
+	
+	public int compareTo(Vessel otherVessel) {
+		return (otherVessel.capacity - capacity);
+	}
 
 }

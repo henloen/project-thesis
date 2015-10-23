@@ -9,11 +9,12 @@ public class Generator {
 	private Installation[] installationSubset;
 	private int[] installationNumbers;
 	private Vessel vessel;
-	private int maxDuration;
+	private int minDuration, maxDuration;
 	private double[][] distances;
 
-	public Generator(Installation[] installationSubset, Vessel vessel, double[][] distances, int maxDuration) {
+	public Generator(Installation[] installationSubset, Vessel vessel, double[][] distances, int minDuration, int maxDuration) {
 		this.vessel = vessel;
+		this.minDuration = minDuration;
 		this.maxDuration = maxDuration;
 		this.distances = distances;
 		unexploredLabels= new ArrayList<Label>();
@@ -29,7 +30,7 @@ public class Generator {
 
 	public Label findCheapestVoyage() {
 		while(! unexploredLabels.isEmpty()) {
-			printLabels();
+			//printLabels();
 			extendLabel(unexploredLabels.get(0));
 		}
 		Label cheapestLabel = null;
@@ -85,15 +86,15 @@ public class Generator {
 		else { //assume that the depot opens at the 
 			timeVoyageFinished = todaysOpeningHour + 24; 
 		}
-		if (timeVoyageFinished <= maxDuration) {
+		if (timeVoyageFinished <= maxDuration && timeVoyageFinished >= minDuration) {
 			double finalCost = currentCost + (sailingTime*vessel.getFuelCostSailing());
 			newLabel = new Label(finalCost,timeVoyageFinished,currentLabel.getCapacityUsed(),depot,currentLabel.getVisited());
 		}
 		else {
 			newLabel = null;
 		}
-		System.out.println("Extending from label " + currentLabel + " to label " + newLabel + "(depot)");
-		System.out.println("Arrival time at depot: " + arrivalTime);
+		//System.out.println("Extending from label " + currentLabel + " to label " + newLabel + "(depot)");
+		//System.out.println("Arrival time at depot: " + arrivalTime);
 		return newLabel;
 		
 	}
@@ -130,20 +131,20 @@ public class Generator {
 		else {
 			newLabel = null;
 		}
-		System.out.println("Extending from label " + currentLabel + " to label " + newLabel);
+		//System.out.println("Extending from label " + currentLabel + " to label " + newLabel);
 		return newLabel;
 	}
 	
 	private void dominateLabels(Label newLabel) {
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(unexploredLabel,newLabel)){
-				printDominatedLabel(unexploredLabel,newLabel); 
+				//printDominatedLabel(unexploredLabel,newLabel); 
 				return;
 			}
 		}
 		for (Label exploredLabel: exploredLabels) {
 			if (dominates(exploredLabel,newLabel)){
-				printDominatedLabel(exploredLabel,newLabel);
+				//printDominatedLabel(exploredLabel,newLabel);
 				return;
 			}
 		}
@@ -152,7 +153,7 @@ public class Generator {
 		ArrayList<Label> removeUnexploredLabels = new ArrayList<Label>();
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(newLabel, unexploredLabel)){
-				printDominatedLabel(newLabel,unexploredLabel);
+				//printDominatedLabel(newLabel,unexploredLabel);
 				removeUnexploredLabels.add(unexploredLabel);
 			}
 		}
@@ -160,7 +161,7 @@ public class Generator {
 		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
 		for (Label exploredLabel : exploredLabels) {
 			if (dominates(newLabel, exploredLabel)){
-				printDominatedLabel(newLabel,exploredLabel);
+				//printDominatedLabel(newLabel,exploredLabel);
 				removeExploredLabels.add(exploredLabel);
 			} 
 		}
@@ -170,7 +171,7 @@ public class Generator {
 	private void dominateDepotLabels(Label newLabel) {
 		for (Label exploredLabel: exploredLabels) {
 			if (dominatesDepot(exploredLabel,newLabel)){
-				printDominatedLabel(exploredLabel,newLabel);
+				//printDominatedLabel(exploredLabel,newLabel);
 				return;
 			}
 		}
@@ -178,7 +179,7 @@ public class Generator {
 		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
 		for (Label exploredLabel : exploredLabels) {
 			if (dominatesDepot(newLabel, exploredLabel)){
-				printDominatedLabel(newLabel,exploredLabel);
+				//printDominatedLabel(newLabel,exploredLabel);
 				removeExploredLabels.add(exploredLabel);
 			} 
 		}

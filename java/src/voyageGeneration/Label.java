@@ -1,5 +1,7 @@
 package voyageGeneration;
 
+import java.text.DecimalFormat;
+
 public class Label {
 	private double cost,capacityUsed, departureTime;
 	private int number;
@@ -46,10 +48,12 @@ public class Label {
 	}
 	
 	public String getFullText() {
-		String string = "number: " + number + ", cost: " + cost + ", capacityUsed: " + capacityUsed + ", departureTime: " + departureTime + ", currentInstallation: " + currentInstallation + ", visited: ";
-		for (int i=0;i<visited.length;i++) {
-			string+=visited[i];
+		DecimalFormat numberFormat = new DecimalFormat("#.00");
+		String string = "number: " + number + "\t cost: " + numberFormat.format(cost) + "\t capacityUsed: " + numberFormat.format(capacityUsed) + "\t departureTime: " + departureTime + "\t currentInstallation: " + currentInstallation + "\t visited: ";
+		for (int i=0;i<visited.length-1;i++) {
+			string+=visited[i] + "-";
 		}
+		string+= visited[visited.length-1];
 		return string;
 	}
 	

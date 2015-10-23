@@ -3,11 +3,11 @@ package voyageGeneration;
 public class Installation {
 	
 	private String name;
-	private int number, demand, frequency;
-	private double openingHour, closingHour, serviceTime;
+	private int number, frequency;
+	private double demand, openingHour, closingHour, serviceTime;
 	
 	public Installation(String name, double openingHour,
-			double closingHour, int demand, int frequency, double serviceTime, int number) {
+			double closingHour, double demand, int frequency, double serviceTime, int number) {
 		this.name = name;
 		this.serviceTime = serviceTime;
 		this.openingHour = openingHour;
@@ -25,7 +25,7 @@ public class Installation {
 		return name;
 	}
 
-	public int getDemand() {
+	public double getDemand() {
 		return demand;
 	}
 
