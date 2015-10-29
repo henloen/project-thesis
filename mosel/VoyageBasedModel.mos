@@ -1,0 +1,61 @@
+model VoyageBasedModel
+uses "mmxprs"; !gain access to the Xpress-Optimizer solver
+
+!optional parameters section
+parameters
+!  SAMPLEPARAM1="c:\test\"
+!  SAMPLEPARAM2=false
+   PROJECTDIR='' ! for when file is added to project
+end-parameters
+
+!sample declarations section
+declarations
+! ...
+	V: set of integer; ! Vessels
+	R: set of integer; ! Voyages
+	Rv: array(Vessels) of set of integer; ! Voyages a vessel can sail
+	Rvi: array(Vessels, Installations) of set of integer; ! Voyages a vessel can sail that visit installation i
+	Rvl: array(Vessels, VoyageDurations) of set of integer;
+	N: set of integer; ! Installations
+	Nvisit: array(2..5) of set of integer; ! Sets of installations requiring 2,3,4,5 visits, respectively
+	Days: set of integer; ! T
+	VoyageDurations: set of integer; ! L
+	
+	TimeCharterCost: array(Vessels) of real; ! C^(TC)
+	VoyageCost: array(Vessels, Voyages) of real; ! C^S, includes sailing and service costs
+	RequiredVisits: array(Installations) of integer; ! S_i
+	Duration: array(Vessels, Voyages) of integer; ! D_(vr)
+	NumberOfDaysAvailable: array(Vessels) of integer; ! F_v, number of days vessel v may be used during the planning period
+ 	DepotCapacity: array(Days) of integer; ! B_t, max number of vessels that can be serviced at depot each day
+		
+	delta: dynamic array(Vessels) of mpvar;
+	x: dynamic array(Vessels, Voyages, Days) of mpvar;
+	
+end-declarations
+	
+forall(vv in Vessels) do
+	create(delta(vv));
+	delta(vv) is_binary;
+	forall(rr in Voyages, tt in Days) do
+		create(x(vv,rr,tt));
+		x(vv,rr,tt) is_binary;
+	end-do
+end-do
+
+! Declaring constraints and objective function
+declarations
+	TotalCost:linctr
+	VisitsCon: dynamic array(Installations) of linctr; ! All installations must be visited the required times
+	AvailableDaysCon: dynamic array(Vessels) of linctr; ! Each vessel does not sail more days than allowed
+	DepotCapacityCon: dynamic array(Days) of linctr; !
+	ReturnBeforeNewVoyageCon: dynamic array(Vessels, Days, VoyageDurations) of linctr; ! Vessel does not begin a new voyage before it has returned from its last voyage
+	
+	
+	
+min(TotalCost);
+
+writeln("Begin running model")
+!...
+writeln("End running model")
+
+end-model
