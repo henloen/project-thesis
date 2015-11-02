@@ -3,12 +3,10 @@ uses  "mmxprs", "mmsheet"; ! Use Xpress-Optimizer and Excel
 
 !optional parameters section
 parameters
-!  SAMPLEPARAM1="c:\test\"
-!  SAMPLEPARAM2=false
-   PROJECTDIR='' ! for when file is added to project
+	 ! Input file is specified here
+	 DataFile = 'VoyageBasedModelData.txt';
 end-parameters
 
-!sample declarations section
 declarations
 	! Sizes of sets which 
 	nV: integer; ! No of vessels
@@ -20,87 +18,101 @@ declarations
 	minL: integer; ! Minimum voyage duration
 	maxL: integer; ! Maximum voyage duration
 	
-	! Sets
-	V: set of integer; ! Vessels
-	R: set of integer; ! Voyages
-	Rv: array(V) of set of integer; ! Voyages a vessel can sail
-	Rvi: array(V, N) of set of integer; ! Voyages a vessel can sail that visit installation i
-	Rvl: array(V, N) of set of integer;
-	N: set of integer; ! Installations
-	F: set of integer; ! Number of required visits
-	Nf: array(F) of set of integer; ! Sets of installations requiring 2,3,4,5 visits, respectively
-	T: set of integer; ! Time period, days
-	L: set of integer; ! Length of voyages (days)
-	
-	! Parameters
-	TimeCharterCost: array(V) of real; ! C^(TC)
-	VoyageCost: array(V, R) of real; ! C^S, includes sailing and service costs
-	RequiredVisits: array(N) of integer; ! S_i
-	Duration: array(V, R) of integer; ! D_(vr)
-	NumberOfDaysAvailable: array(V) of integer; ! F_v, number of days vessel v may be used during the planning period
- 	DepotCapacity: array(T) of integer; ! B_t, max number of vessels that can be serviced at depot each day
-	
-	! Parameters used for spreading departures
-	Pf_min: array(F); ! Minimum no of departures to an installation in the horizon hf
-	Pf_max: array(F); ! Maximum no of departures to an installation in the horizon hf
-	hf: array(F); ! Horizon in which we need to constrain number of departures. given f required visits
-		
-	! Variables
-	delta: dynamic array(V) of mpvar; ! 1 if vessel v is chartered, 0 otherwise
-	x: dynamic array(V, R, T) of mpvar; ! 1 if vessel v sails route r starting on day t
 	
 end-declarations
 
-initializations from "mmodbc.excel:Input.xls" ! Input file is specified here
+initializations from DataFile
+	nV;
+	nR;
+	nN;
+	minF;
+	maxF;
+	nT;
+	minL;
+	maxL;
+end-initializations
+
+V := 1 .. nV;
+N := 1 .. nN;
+F := minF .. maxF;
+T := 1 .. nT;
+L := minL .. maxL;
+R := 1 .. nR;
+
+declarations
 	! Sets
-	V;
-	R;
+	Rv: array(V) of set of integer; ! Voyages a vessel can sail
+	Rvi: array(V, N) of set of integer; ! Voyages a vessel can sail that visit installation i
+	Rvl: array(V, N) of set of integer;
+	Nf: array(F) of set of integer; ! Sets of installations requiring 2,3,4,5 visits, respectively
+	
+	! Parameters
+	TimeCharterCost: array(V) of real; ! C^(TC)
+	VoyageCost: array(R) of real; ! C^S, includes sailing and service costs
+	RequiredVisits: array(N) of integer; ! S_i
+	NumberOfDaysAvailable: array(V) of integer; ! F_v, number of days vessel v may be used during the planning period
+ 	DepotCapacity: array(T) of integer; ! B_t, max number of vessels that can be serviced at depot each day
+			
+	hf: array(1..7) of integer;
+	Pf_min: array(1..7) of integer;
+	Pf_max: array(1..7) of integer;
+	
+	! Variables
+	delta: dynamic array(V) of mpvar; ! 1 if vessel v is chartered, 0 otherwise
+	x: dynamic array(V, R, T) of mpvar; ! 1 if vessel v sails route r starting on day t
+end-declarations
+
+! Parameters used for spreading departures
+hf ::	[6, 2, 2, 3, 1, 0, 0] ! Horizon in which we need to constrain number of departures, given f required visits
+Pf_min :: [0, 0, 1, 2, 1, 0, 0] ! Minimum no of departures to an installation in the horizon hf
+Pf_max :: [1, 1, 3, 4, 2, 1, 1] ! Maximum no of departures to an installation in the horizon hf
+
+initializations from DataFile
+	! Sets
 	Rv;
 	Rvi;
 	Rvl;
-	N;
-	F;
+	nN;
+	minF;
+	maxF;
 	Nf;
-	T;
-	L;
+	nT;
+	minL;
+	maxL;
 	
 	!Parameters
 	TimeCharterCost;
 	VoyageCost;
 	RequiredVisits;
-	Duration;
 	NumberOfDaysAvailable;
  	DepotCapacity;
- 	
-	Pf_min;
-	Pf_max;
-	hf;
 end-initializations
-
 
 !Creating variables
 forall(vv in V) do
 	create(delta(vv));
 	delta(vv) is_binary;
-	forall(rr in R, tt in T) do
-		create(x(vv,rr,tt));
-		x(vv,rr,tt) is_binary;
+	
+	forall(rv in Rv(vv), tt in T) do
+		create(x(vv,rv,tt));
+		x(vv,rv,tt) is_binary;
 	end-do
+	
 end-do
 
 ! Declaring constraints and objective function
 declarations
 	TotalCost:linctr ! (4.1)
-	VisitsCon: dynamic array(N) of linctr; ! ! (4.2) All installations must be visited the required times
-	AvailableDaysCon: dynamic array(V) of linctr; ! ! (4.3) Each vessel does not sail more days than allowed
-	DepotCapacityCon: dynamic array(T) of linctr; ! ! (4.4)
-	ReturnBeforeNewVoyageCon: dynamic array(V, T, L) of linctr; ! ! (4.5) Vessel does not begin a new voyage before it has returned from its last voyage
-	SpreadDeparturesCon: dynamic array(N, F, T) of linctr; ! (4.6)
+	VisitsCon: dynamic array(N) of linctr; ! (4.2) All installations must be visited the required times
+	AvailableDaysCon: dynamic array(V) of linctr; ! (4.3) Each vessel does not sail more days than allowed
+	DepotCapacityCon: dynamic array(T) of linctr; ! (4.4)
+	ReturnBeforeNewVoyageCon: dynamic array(V, T, L) of linctr; ! (4.5) Vessel does not begin a new voyage before it has returned from its last voyage
+	SpreadDeparturesMinCon: dynamic array(N, F, T) of linctr; ! (4.6) - Lower bound
+	SpreadDeparturesMaxCon: dynamic array(N, F, T) of linctr; ! (4.6) - Upper bound
 end-declarations
 
 ! (4.1)
-TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) ...
-	+ sum(vv in V, rr in Rv(vv), tt in T)VoyageCost(vv, rr) * x(vv, rr, tt);
+TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * x(vv, rr, tt);
 
 ! (4.2)
 forall(ii in N) do
@@ -109,8 +121,7 @@ end-do
 
 ! (4.3)
 forall(vv in V) do
-	AvailableDaysCon(vv) := sum(rr in Rv(vv), tt in T) (D(vv, rr)*x(vv,rr,tt))...
-		- NumberOfDaysAvailable(vv) * delta(vv) <= 0;
+	AvailableDaysCon(vv) := sum(ll in L, rr in Rv(vv), tt in T) (x(vv,rr,tt)) * ll - NumberOfDaysAvailable(vv) * delta(vv) <= 0;
 end-do
 
 ! (4.4)
@@ -120,23 +131,19 @@ end-do
 
 ! (4.5)
 forall(vv in V, tt in T, ll in L) do
-	sum(rr in Rvl(vv,ll))) x(vv,rr,tt) + sum(rr in Rv(vv), ti in 1..(ll-1)) x(vv,rr,mod(tt+ti, nT))...
-	<= delta(vv);
+	ReturnBeforeNewVoyageCon(vv, tt, ll) := sum(rr in Rvl(vv,ll)) x(vv,rr,tt) + sum(rr in Rv(vv), ti in 1..(ll-1)) x(vv, rr, (tt+ti)mod nT)	<= delta(vv);
 end-do
 
 ! (4.6)
 forall(ff in F, ii in Nf(ff), tt in T) do
-	SpreadDeparturesCon(nn, ff, tt) := Pf_min(ff) <= ...
-		sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, mod(tt+hh,nT))...
-		<= Pf_max(ff);
+	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, (tt+hh)mod nT );
+	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, (tt+hh)mod nT );
 end-do
-
-
 	
-min(TotalCost);
+	
+minimize(TotalCost);
 
 writeln("Begin running model")
-!...
 writeln("End running model")
 
 end-model

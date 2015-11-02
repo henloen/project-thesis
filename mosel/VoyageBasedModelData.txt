@@ -1,0 +1,54 @@
+! Sizes of sets
+	nV : 	2 ! No of vessels
+	nR : 	4 ! No of voyages
+	nN : 	3 ! No of installations
+	minF :	2 ! Minimum number of required visits
+	maxF :	3 ! Maximum number of required visits
+	nT : 	7 ! No of days in planning period
+	minL : 	2 ! Minimum voyage duration
+	maxL : 	3 ! Maximum voyage duration
+	
+	! Sets
+	R : [1, 2, 3, 4]
+	
+	Rv : [
+		! Each element is a set of voyages vessel v can sail
+		[1, 2, 3, 4]
+		[1, 2, 3]
+	]
+	
+	Rvi: [
+		! Voyages a vessel can sail that visit installation i
+		! Row = vessel v, column = installation i
+		[3, 4], [1, 2], [1, 2, 3, 4]
+		[], [1, 2], [1, 2, 4]
+	]
+	
+	Rvl: [
+		! Voyages a vessel can sail that have duration l
+		! Row = vessel v, column = duration l
+		! Note: Index l starting on minL, e.g. first column may have index 2
+		[3], [1, 2, 4]
+		[], [1, 2, 4]
+	]
+	
+	Nf:[
+		! Sets of installations requiring f visits
+		! Index = no of visits f
+		! Here, installations 
+		[1, 3], [2]
+	]
+
+	! Parameters
+	TimeCharterCost: [10000, 20000] ! C^TC	
+	
+	VoyageCost : [1000, 2000, 2500, 1400] ! C^(S), includes sailing and service costs
+	
+	RequiredVisits: [2, 3, 2] ! S_i
+	
+	NumberOfDaysAvailable: [6, 6] ! F_v, number of days vessel v may be used during the planning period
+ 	
+ 	DepotCapacity: [2, 2, 2, 2, 2, 2, 2] ! B_t, max number of vessels that can be serviced at depot each day
+
+	
+		
