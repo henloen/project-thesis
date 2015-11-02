@@ -28,7 +28,7 @@ public class Generator {
 		createInstallationNumbers();
 	}
 
-	public Label findCheapestVoyage() {
+	public Voyage findCheapestVoyage() {
 		while(! unexploredLabels.isEmpty()) {
 			//printLabels();
 			extendLabel(unexploredLabels.get(0));
@@ -41,7 +41,11 @@ public class Generator {
 				lowestCost = exploredLabel.getCost();
 			}
 		}
-		return cheapestLabel; //returns null if there is no feasible solution to the subproblem
+		Voyage cheapestVoyage = null;//returns null if there is no feasible solution to the subproblem
+		if (cheapestLabel != null) {
+			cheapestVoyage = new Voyage(cheapestLabel.getCost(), cheapestLabel.getCapacityUsed(), cheapestLabel.getDepartureTime(), cheapestLabel.getVisited());
+		}
+		return cheapestVoyage; //returns null if there is no feasible solution to the subproblem
 	}
 	
 	private boolean isGoalLabel (Label label) {

@@ -2,8 +2,12 @@ package voyageGeneration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class Main {
 	
@@ -26,25 +30,22 @@ public class Main {
 	private static double[][] distances;
 	private static ArrayList<Vessel[]> vesselSets;
 	private static ArrayList<Installation[]> installationSubsets;
-	private static HashMap<Vessel, List<Label>> voyageSet;
+	private static Set<Voyage> voyageSet;
+	private static HashMap<Vessel, List<Voyage>> voyageSetByVessel;
+	private static HashMap<Vessel, HashMap<Installation, List<Voyage>>> voyageSetByVesselAndInstallation;
+	private static HashMap<Vessel, HashMap<Integer, List<Voyage>>> voyageSetByVesselAndDuration;
 	private static IO io;
 	private static long startTime, stopTime;
-	private static double loadFactor = 1.2;
-	private static int minDuration = 56, //from Halvorsen-Weare: 2 days = 56 hours
-			maxDuration = 80,//from Halvorsen-Weare: 3 days = 80 hours
-			numberOfNodes = 15, //problem size, includes the depot
-			numberOfInstallationAttributes = 6,
-			numberOfVessels = 5,
-			numberOfVesselAttributes = 7,
-			minNumberOfInstallations = 1,//set to 1 because Halvorsen-Weare let's the minimum duration limit the minimum number of installations (H-W also does this)
-			maxNumberOfInstallations = 8;//from Halvorsen-Weare,
 	private static String inputFileName = "data/input/Input data.xls",
 			outputFileName = "data/output/"; //sets the folder see the constructor of IO for the filename format
 	
 	
 	public static void main(String[] args) {
 		startTime = System.nanoTime();
-		voyageSet = new HashMap<Vessel, List<Label>>(); //initialize the voyage set, R_v in the mathematical model
+		voyageSet = new HashSet<Voyage>();
+		voyageSetByVessel = new HashMap<Vessel, List<Voyage>>(); //initialize the voyage set, R_v in the mathematical model
+		voyageSetByVesselAndInstallation = new HashMap<Vessel, HashMap<Installation, List<Voyage>>>(); //initialize the voyage set indexed by both vessel and installation, R_vi in the mathematical model
+		voyageSetByVesselAndDuration= new HashMap<Vessel, HashMap<Integer, List<Voyage>>>(); //initialize the voyage set indexed by both vessel and duration, R_vl in the mathematical model
 		getData();	//get the input data of installations, vessels and distances from the excel input file 
 		generateVesselSets(); //generate a set of vessels for each sailing speed, sorted descending by capacity
 		generateInstallationSubsets();	//generate all possible installation subsets with minimum and mamimum number of installations
@@ -53,31 +54,92 @@ public class Main {
 		for (Vessel[] vesselSet : vesselSets) {
 			generateVoyageSet(vesselSet); //generates the voyages for the vessel set and adds them to voyageSet 
 		}
+		generateVoyages();
+		generateVoyageSetByVesselAndInstallation();
+		generateVoyageSetByVesselAndDuration();
+		
 		stopTime = System.nanoTime();
-		io.writeSolutionToFile(voyageSet,stopTime-startTime,minDuration,maxDuration,minNumberOfInstallations,maxNumberOfInstallations); //stopTime-startTime equals the execution time of the program
+		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, stopTime-startTime); //stopTime-startTime equals the execution time of the program
+		//io.writeOutputToTextFile(voyageSet, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, stopTime-startTime); //stopTime-startTime equals the execution time of the program
 	}
 	
+	private static void generateVoyages() {
+		for (Vessel vessel : voyageSetByVessel.keySet()) {
+			voyageSet.addAll(voyageSetByVessel.get(vessel));
+		}
+	}
+
+	private static void generateVoyageSetByVesselAndDuration() {
+		for (Vessel vessel : voyageSetByVessel.keySet()) {
+			List<Voyage> voyages = voyageSetByVessel.get(vessel);//all voyages for a vessel 
+			HashMap<Integer, List<Voyage>> voyageSetByDuration = new HashMap<Integer, List<Voyage>>();
+			for (Voyage voyage : voyages) { //loop through all voyages for the vessel
+				Integer tempDuration = (int) (voyage.getDepartureTime() - 8) / 24; //have to cast from double to int 
+				List<Voyage> tempVoyageList = voyageSetByDuration.get(tempDuration); //get the current list of voyages for the combination of duration and vessel
+				if (tempVoyageList == null) {//if no list of voyages has been instantiated
+					tempVoyageList = new ArrayList<Voyage>();
+				}
+				tempVoyageList.add(voyage); //add the new voyage to the list of voyages for that combination of installation and vessel
+				voyageSetByDuration.put(tempDuration, tempVoyageList); //change the list of voyages for the combination of installation and vessel
+				
+			}
+			voyageSetByVesselAndDuration.put(vessel, voyageSetByDuration);
+			List<Integer> durations = new ArrayList<>();
+			for (int i = io.getMinDuration(); i < io.getMaxDuration(); i+=24) {
+				durations.add(i);
+			}
+			for (Integer d : durations) {
+				
+			}
+		}
+	}
+	
+	private static void generateVoyageSetByVesselAndInstallation() {
+		for (Vessel vessel : voyageSetByVessel.keySet()) {
+			List<Voyage> voyages = voyageSetByVessel.get(vessel);//all voyages for a vessel 
+			HashMap<Installation, List<Voyage>> voyageSetByInstallation = new HashMap<Installation, List<Voyage>>();
+			for (Voyage voyage : voyages) { //loop through all voyages for the vessel
+				for (int installationNumber : voyage.getVisited()) { //loop through all installations visited in the voyage
+					Installation tempInst = installations[installationNumber];
+					List<Voyage> tempVoyageList = voyageSetByInstallation.get(tempInst); //get the current list of voyages for the combination of installation and vessel
+					if (tempVoyageList == null) {//if no list of voyages has been instantiated
+						tempVoyageList = new ArrayList<Voyage>();
+					}
+					tempVoyageList.add(voyage); //add the new voyage to the list of voyages for that combination of installation and vessel
+					voyageSetByInstallation.put(tempInst, tempVoyageList); //change the list of voyages for the combination of installation and vessel
+				}
+				voyageSetByVesselAndInstallation.put(vessel, voyageSetByInstallation);
+			}
+			for (int i = 0; i < installations.length; i++) { // a for loop to add empty arraylists for the installations not visited by the vessel
+				if (voyageSetByInstallation.get(installations[i]) == null){
+					voyageSetByInstallation.put(installations[i], new ArrayList<Voyage>());
+				}
+			}
+		}
+	}
+
+
 	private static void generateVoyageSet(Vessel[] vesselSet) {
 		Vessel vesselMax = vesselSet[0]; //the vessel sets are sorted descending by capacity, i.e. the first vessel has the largest capacity 
 		ArrayList<Installation[]> possibleInstallationSubsets =  getPossibleInstallationSubsets(vesselMax.getCapacity());
-		List<Label> cheapestVoyages = new ArrayList<Label>();
+		List<Voyage> cheapestVoyages = new ArrayList<Voyage>();
 		for (Installation[] installationSubset : possibleInstallationSubsets) {
-			Generator generator = new Generator(installationSubset, vesselMax, distances, minDuration, maxDuration);
-			Label cheapestVoyage = generator.findCheapestVoyage();
+			Generator generator = new Generator(installationSubset, vesselMax, distances, io.getMinDuration(), io.getMaxDuration());
+			Voyage cheapestVoyage = generator.findCheapestVoyage();
 			if (cheapestVoyage != null) {
 				cheapestVoyages.add(cheapestVoyage);
 			}
 		}
-		voyageSet.put(vesselMax, cheapestVoyages); //add the voyageSet of voyageMax
+		voyageSetByVessel.put(vesselMax, cheapestVoyages); //add the voyageSet of voyageMax
 		for (int i=1;i<vesselSet.length;i++) {//loop through the rest of the vessels and add the voyages from vesselMax if the capacity is not to high
-			List<Label> tempCheapestVoyages = new ArrayList<Label>();
+			List<Voyage> tempCheapestVoyages = new ArrayList<Voyage>();
 			Vessel vessel = vesselSet[i];
-			for (Label voyage : cheapestVoyages) {
+			for (Voyage voyage : cheapestVoyages) {
 				if (voyage.getCapacityUsed() <= vessel.getCapacity()) {
 					tempCheapestVoyages.add(voyage);
 				}
 			}
-			voyageSet.put(vessel, tempCheapestVoyages);//add the voyages of the vessel to voyageSet
+			voyageSetByVessel.put(vessel, tempCheapestVoyages);//add the voyages of the vessel to voyageSet
 		}
 	}
 	
@@ -102,7 +164,7 @@ public class Main {
 	
 	private static void generateInstallationSubsets(){
 		Subsets sb = new Subsets();
-		installationSubsets = sb.generateSubsets(installations, minNumberOfInstallations, maxNumberOfInstallations);
+		installationSubsets = sb.generateSubsets(installations, io.getMinNumberOfInstallations(), io.getMaxNumberOfInstallations());
 	}
 	
 	//Generates the set of vessels with the same sailing speed
@@ -136,7 +198,7 @@ public class Main {
 	}
 	
 	private static void getData() {
-		io = new IO(numberOfNodes,numberOfInstallationAttributes,numberOfVessels,numberOfVesselAttributes, loadFactor, inputFileName, outputFileName);
+		io = new IO(inputFileName, outputFileName);
 		installations = io.getInstallations();
 		vessels = io.getVessels();
 		distances = io.getDistances();

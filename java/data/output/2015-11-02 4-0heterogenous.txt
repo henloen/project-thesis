@@ -1,0 +1,43 @@
+!Summary:
+!Execution time: 0,31 seconds
+!Total # voyages: 29
+!Number of installations (excluding depot): 4
+!Number of time windows: 0
+!Number of vessels: 5
+
+!Min. # installations: 1
+!Max. number of installations: 8
+!Min. duration: 56
+!Max. duration: 80
+
+!Name: HavilaForesight	 # voyages: 3
+!Name: FarSeeker	 # voyages: 14
+!Name: FarSymphony	 # voyages: 14
+!Name: FarStar	 # voyages: 15
+!Name: FarSearcher	 # voyages: 14
+!------------------------------------------------------------------------------------------------------------------------
+nV : 5
+nR : 29
+nN : 4
+minF : 1
+maxF : 8
+nT : 7
+minL : 2
+maxL : 3
+
+Rv : [
+[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]!Vessel: FarSeeker
+[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]!Vessel: FarSearcher
+[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]!Vessel: FarSymphony
+[16, 18, 20]!Vessel: HavilaForesight
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]!Vessel: FarStar
+] 
+
+Rvi : [
+[[16, 17, 19, 21, 23, 25, 27, 29], [17, 22, 23, 24, 25, 28, 29], [18, 19, 22, 23, 26, 27, 28, 29], [20, 21, 24, 25, 26, 27, 28, 29]]!Vessel: FarSeeker
+[[16, 17, 19, 21, 23, 25, 27, 29], [17, 22, 23, 24, 25, 28, 29], [18, 19, 22, 23, 26, 27, 28, 29], [20, 21, 24, 25, 26, 27, 28, 29]]!Vessel: FarSearcher
+[[16, 17, 19, 21, 23, 25, 27, 29], [17, 22, 23, 24, 25, 28, 29], [18, 19, 22, 23, 26, 27, 28, 29], [20, 21, 24, 25, 26, 27, 28, 29]]!Vessel: FarSymphony
+[[16], [], [18], [20]]!Vessel: HavilaForesight
+[[1, 3, 5, 7, 9, 11, 13, 15], [2, 3, 8, 9, 10, 11, 14, 15], [4, 5, 8, 9, 12, 13, 14, 15], [6, 7, 10, 11, 12, 13, 14, 15]]!Vessel: FarStar
+] 
+
