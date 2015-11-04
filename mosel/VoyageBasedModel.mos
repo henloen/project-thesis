@@ -43,8 +43,8 @@ declarations
 	! Sets
 	Rv: array(V) of set of integer; ! Voyages a vessel can sail
 	Rvi: array(V, N) of set of integer; ! Voyages a vessel can sail that visit installation i
-	Rvl: array(V, N) of set of integer;
-	Nf: array(F) of set of integer; ! Sets of installations requiring 2,3,4,5 visits, respectively
+	Rvl: array(V, N) of set of integer; ! Voyages a vessel can sail that has duration l
+	Nf: array(F) of set of integer; ! Sets of installations requiring f visits
 	
 	! Parameters
 	TimeCharterCost: array(V) of real; ! C^(TC)
@@ -117,6 +117,7 @@ TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) + sum(vv in V, rr in Rv
 ! (4.2)
 forall(ii in N) do
 	VisitsCon(ii) := sum(vv in V, rr in Rvi(vv,ii), tt in T) x(vv,rr,tt) >= RequiredVisits(ii);
+	writeln("Installation " + ii + " requires " + RequiredVisits(ii) + " visits.");
 end-do
 
 ! (4.3)
@@ -131,19 +132,54 @@ end-do
 
 ! (4.5)
 forall(vv in V, tt in T, ll in L) do
-	ReturnBeforeNewVoyageCon(vv, tt, ll) := sum(rr in Rvl(vv,ll)) x(vv,rr,tt) + sum(rr in Rv(vv), ti in 1..(ll-1)) x(vv, rr, (tt+ti)mod nT)	<= delta(vv);
+	ReturnBeforeNewVoyageCon(vv, tt, ll) := sum(rr in Rvl(vv,ll)) x(vv,rr,tt) + sum(rr in Rv(vv), ti in 1..(ll-1)) x(vv, rr, ((tt+ti)mod nT)+1)	<= delta(vv);
 end-do
 
 ! (4.6)
 forall(ff in F, ii in Nf(ff), tt in T) do
-	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, (tt+hh)mod nT );
-	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, (tt+hh)mod nT );
+	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT)+1 );
+	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT)+1 );
 end-do
 	
 	
 minimize(TotalCost);
 
 writeln("Begin running model")
-writeln("End running model")
+
+nVesselsUsed := 0;
+
+forall(vv in V) do
+	writeln("Vessel " + vv + ": " + getsol(delta(vv)));
+	if (getsol(delta(vv)) = 1) then
+		nVesselsUsed := nVesselsUsed + 1;
+	end-if	
+end-do
+	
+writeln("------------------------------------------------------------");
+
+nVoyagesUsed := 0;
+
+forall(vv in V, rr in R, tt in T) do
+	writeln("Vessel " + vv + ", Voyage " + rr + ", day " + tt + ": " + getsol(x(vv,rr,tt)));
+	if (getsol(x(vv,rr,tt)) = 1) then
+		nVoyagesUsed := nVoyagesUsed + 1;
+	end-if	
+end-do
+
+writeln("------------------------------------------------------------");
+writeln("Number of vessels used: " + nVesselsUsed);
+writeln("Number of voyages sailed: " + nVoyagesUsed);
+
+forall(ii in N) do
+	!visits := 0;
+	!forall(vv in V, rr in Rvi(vv, ii), tt in T) do
+	!	visits := visits + getsol(x(vv,rr,tt);
+	!end-do
+	
+	visits := sum(vv in V, rr in Rvi(vv,ii), tt in T) getsol(x(vv,rr,tt));
+	writeln("Installation " + ii + " is visited " + visits + " times");
+	writeln(getslack(VisitsCon(ii)));
+	writeln(getcoeff(VisitsCon(ii)));
+end-do
 
 end-model
