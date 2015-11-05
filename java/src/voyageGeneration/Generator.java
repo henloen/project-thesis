@@ -30,7 +30,6 @@ public class Generator {
 
 	public Voyage findCheapestVoyage() {
 		while(! unexploredLabels.isEmpty()) {
-			//printLabels();
 			extendLabel(unexploredLabels.get(0));
 		}
 		Label cheapestLabel = null;
@@ -97,8 +96,6 @@ public class Generator {
 		else {
 			newLabel = null;
 		}
-		//System.out.println("Extending from label " + currentLabel + " to label " + newLabel + "(depot)");
-		//System.out.println("Arrival time at depot: " + arrivalTime);
 		return newLabel;
 		
 	}
@@ -135,20 +132,17 @@ public class Generator {
 		else {
 			newLabel = null;
 		}
-		//System.out.println("Extending from label " + currentLabel + " to label " + newLabel);
 		return newLabel;
 	}
 	
 	private void dominateLabels(Label newLabel) {
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(unexploredLabel,newLabel)){
-				//printDominatedLabel(unexploredLabel,newLabel); 
 				return;
 			}
 		}
 		for (Label exploredLabel: exploredLabels) {
 			if (dominates(exploredLabel,newLabel)){
-				//printDominatedLabel(exploredLabel,newLabel);
 				return;
 			}
 		}
@@ -157,7 +151,6 @@ public class Generator {
 		ArrayList<Label> removeUnexploredLabels = new ArrayList<Label>();
 		for (Label unexploredLabel : unexploredLabels) {
 			if (dominates(newLabel, unexploredLabel)){
-				//printDominatedLabel(newLabel,unexploredLabel);
 				removeUnexploredLabels.add(unexploredLabel);
 			}
 		}
@@ -165,7 +158,6 @@ public class Generator {
 		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
 		for (Label exploredLabel : exploredLabels) {
 			if (dominates(newLabel, exploredLabel)){
-				//printDominatedLabel(newLabel,exploredLabel);
 				removeExploredLabels.add(exploredLabel);
 			} 
 		}
@@ -175,7 +167,6 @@ public class Generator {
 	private void dominateDepotLabels(Label newLabel) {
 		for (Label exploredLabel: exploredLabels) {
 			if (dominatesDepot(exploredLabel,newLabel)){
-				//printDominatedLabel(exploredLabel,newLabel);
 				return;
 			}
 		}
@@ -183,7 +174,6 @@ public class Generator {
 		ArrayList<Label> removeExploredLabels = new ArrayList<Label>();
 		for (Label exploredLabel : exploredLabels) {
 			if (dominatesDepot(newLabel, exploredLabel)){
-				//printDominatedLabel(newLabel,exploredLabel);
 				removeExploredLabels.add(exploredLabel);
 			} 
 		}
@@ -260,16 +250,6 @@ public class Generator {
 		for (int i=0;i<installationSubset.length;i++) {
 			installationNumbers[i] = installationSubset[i].getNumber();
 		}
-	}
-	
-	private void printLabels() {
-		System.out.println("Unexplored labels:" + unexploredLabels);
-		System.out.println("Explored labels: " + exploredLabels);
-	}
-	
-	private void printDominatedLabel(Label label1, Label label2) {
-		System.out.println("Dominator: " + label1.getFullText());
-		System.out.println("Dominated: " + label2.getFullText());
 	}
 	
 	private double getDistance(Installation i1, Installation i2) {

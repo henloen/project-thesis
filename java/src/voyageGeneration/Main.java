@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 public class Main {
 	
@@ -30,7 +29,8 @@ public class Main {
 	private static double[][] distances;
 	private static ArrayList<Vessel[]> vesselSets;
 	private static ArrayList<Installation[]> installationSubsets;
-	private static Set<Voyage> voyageSet;
+	private static HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency;
+	private static ArrayList<Voyage> voyageSet;
 	private static HashMap<Vessel, List<Voyage>> voyageSetByVessel;
 	private static HashMap<Vessel, HashMap<Installation, List<Voyage>>> voyageSetByVesselAndInstallation;
 	private static HashMap<Vessel, HashMap<Integer, List<Voyage>>> voyageSetByVesselAndDuration;
@@ -42,10 +42,11 @@ public class Main {
 	
 	public static void main(String[] args) {
 		startTime = System.nanoTime();
-		voyageSet = new HashSet<Voyage>();
+		voyageSet = new ArrayList<Voyage>();
 		voyageSetByVessel = new HashMap<Vessel, List<Voyage>>(); //initialize the voyage set, R_v in the mathematical model
 		voyageSetByVesselAndInstallation = new HashMap<Vessel, HashMap<Installation, List<Voyage>>>(); //initialize the voyage set indexed by both vessel and installation, R_vi in the mathematical model
-		voyageSetByVesselAndDuration= new HashMap<Vessel, HashMap<Integer, List<Voyage>>>(); //initialize the voyage set indexed by both vessel and duration, R_vl in the mathematical model
+		voyageSetByVesselAndDuration = new HashMap<Vessel, HashMap<Integer, List<Voyage>>>(); //initialize the voyage set indexed by both vessel and duration, R_vl in the mathematical model
+		installationSetsByFrequency = new HashMap<Integer, ArrayList<Installation>>(); //initialize the set of installation for each frequency, Nf
 		getData();	//get the input data of installations, vessels and distances from the excel input file 
 		generateVesselSets(); //generate a set of vessels for each sailing speed, sorted descending by capacity
 		generateInstallationSubsets();	//generate all possible installation subsets with minimum and mamimum number of installations
@@ -57,16 +58,22 @@ public class Main {
 		generateVoyages();
 		generateVoyageSetByVesselAndInstallation();
 		generateVoyageSetByVesselAndDuration();
+		generateInstallationSetsByFrequency();
 		
 		stopTime = System.nanoTime();
-		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, stopTime-startTime); //stopTime-startTime equals the execution time of the program
+		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, installationSetsByFrequency, stopTime-startTime); //stopTime-startTime equals the execution time of the program
 		//io.writeOutputToTextFile(voyageSet, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, stopTime-startTime); //stopTime-startTime equals the execution time of the program
 	}
 	
 	private static void generateVoyages() {
 		for (Vessel vessel : voyageSetByVessel.keySet()) {
-			voyageSet.addAll(voyageSetByVessel.get(vessel));
+			for (Voyage voyage : voyageSetByVessel.get(vessel)) {
+				if (! voyageSet.contains(voyage)) {
+					voyageSet.add(voyage);
+				}
+			}
 		}
+		Collections.sort(voyageSet);
 	}
 
 	private static void generateVoyageSetByVesselAndDuration() {
@@ -84,12 +91,14 @@ public class Main {
 				
 			}
 			voyageSetByVesselAndDuration.put(vessel, voyageSetByDuration);
-			List<Integer> durations = new ArrayList<>();
+			List<Integer> durations = new ArrayList<>();// the list of feasible durations, the rest of the method adds an empty arraylist for the durations with no voyages
 			for (int i = io.getMinDuration(); i < io.getMaxDuration(); i+=24) {
-				durations.add(i);
+				durations.add((i-8)/24);
 			}
 			for (Integer d : durations) {
-				
+				if (voyageSetByDuration.get(d) == null) {
+					voyageSetByDuration.put(d, new ArrayList<Voyage>());
+				}
 			}
 		}
 	}
@@ -194,6 +203,30 @@ public class Main {
 			}
 			Arrays.sort(vesselSet);
 			vesselSets.add(vesselSet);
+		}
+	}
+	
+	private static void generateInstallationSetsByFrequency() {
+		int minFrequency = Integer.MAX_VALUE; //any frequency will be lower than this
+		int maxFrequency = Integer.MIN_VALUE; //any frequency will be higher than this
+		for (int i = 1; i < installations.length; i++) { //starts at 1 to ignore the frequency of the depot
+			Installation installation = installations[i];
+			int frequency = installation.getFrequency();
+			if (frequency < minFrequency) {
+				minFrequency = frequency;
+			}
+			if (frequency > maxFrequency) {
+				maxFrequency = frequency;
+			}
+		}
+		for (int f = minFrequency; f <= maxFrequency; f++) {
+			ArrayList<Installation> installationList = new ArrayList<>();
+			for (Installation i : installations) {
+				if (i.getFrequency() == f) {
+					installationList.add(i);
+				}
+			}
+			installationSetsByFrequency.put(f, installationList);
 		}
 	}
 	
