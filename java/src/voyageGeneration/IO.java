@@ -142,7 +142,6 @@ public class IO {
 		writer.println();
 		for (int i = 0 ; i < vessels.length; i++) {
 			Vessel vessel = vessels[i];
-			writer.print("[");
 			for (int j = 1; j < installations.length ; j++) {//starts at 1 to exclude the depot
 				Installation installation = installations[j];
 				writer.print("[");
@@ -159,7 +158,6 @@ public class IO {
 					 writer.print(", ");
 				}
 			}
-			writer.print("]");
 			writer.println("!Vessel: " + vessel.getName());
 		}
 		writer.println("] \n");
@@ -186,7 +184,6 @@ public class IO {
 		writer.println();
 		for (int i = 0 ; i < vessels.length; i++) {
 			Vessel vessel = vessels[i];
-			writer.print("[");
 			for (int j = 0; j < durations.size(); j++) {
 				Integer duration = durations.get(j);
 				writer.print("[");
@@ -203,7 +200,6 @@ public class IO {
 					 writer.print(", ");
 				}
 			}
-			writer.print("]");
 			writer.println("!Vessel: " + vessel.getName());
 		}
 		writer.println("] \n");
