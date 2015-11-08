@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -106,8 +105,6 @@ public class IO {
 		writer.println("nV : " + vessels.length);
 		writer.println("nR : " + voyageSet.size());
 		writer.println("nN : " + (installations.length - 1)); //node 0 is the depot and should be excluded
-		writer.println("minF : " + minNumberOfInstallations);
-		writer.println("maxF : " + maxNumberOfInstallations);
 		writer.println("nT : " + lengthOfPlanningPeriod);
 		writer.println("minL : " + ((minDuration - 8) / 24)); // the max duration is converted from hours to days
 		writer.println("maxL : " + ((maxDuration - 8) / 24)); // the max duration is converted from hours to days
@@ -206,10 +203,12 @@ public class IO {
 	}
 	
 	private void writeNf(PrintWriter writer, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency) {
-		writer.println("Nf : [");
 		ArrayList<Integer> frequencies = new ArrayList<Integer>(); 
 		frequencies.addAll(installationSetsByFrequency.keySet());
 		Collections.sort(frequencies);
+		writer.println("minF : " + frequencies.get(0));
+		writer.println("maxF : " + frequencies.get(frequencies.size()-1));
+		writer.println("Nf : [");
 		writer.print("!f : ");
 		for (int i = 0; i < frequencies.size(); i++) {
 			writer.print(frequencies.get(i));
