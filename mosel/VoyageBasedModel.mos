@@ -60,7 +60,7 @@ declarations
 	x: dynamic array(V, R, T) of mpvar; ! 1 if vessel v sails route r starting on day t
 	
 	! Output helpers
-	Days: array(T) of string;
+	DayNames: array(T) of string;
 end-declarations
 
 ! Parameters used for spreading departures
@@ -68,8 +68,8 @@ hf ::	[6, 2, 2, 3, 1, 0, 0] ! Horizon in which we need to constrain number of de
 Pf_min :: [0, 0, 1, 2, 1, 0, 0] ! Minimum no of departures to an installation in the horizon hf
 Pf_max :: [1, 1, 3, 4, 2, 1, 1] ! Maximum no of departures to an installation in the horizon hf
 
-! Days is used to make output readable
-Days :: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+! DayNames is used to make output more readable
+DayNames :: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
 
 initializations from DataFile
 	! Sets
@@ -139,42 +139,46 @@ forall(vv in V, tt in T, ll in L) do
 	ReturnBeforeNewVoyageCon(vv, tt, ll) := sum(rr in Rvl(vv,ll)) (x(vv,rr,tt)) + sum(rr in Rv(vv), ti in 1..(ll-1)) x(vv, rr, (tt+ti)mod nT)<= delta(vv);
 end-do
 
-
 ! (4.6)
-
 forall(ff in F, ii in Nf(ff), tt in T) do
 	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 
+	(!
 	forall(hh in 0..hf(ff)) do
 		writeln("Day " + (tt+hh) + " becomes day " + (tt+hh)mod nT + ", " + Days((tt+hh)mod nT));
 	end-do
+	!)
 end-do
 
-	
-minimize(TotalCost);
+
 
 writeln("------------------------------------------------------------");
-writeln("Begin running model\n")
-writeln("Vessels used: \n");
+writeln("Begin running model...")
 
+
+minimize(TotalCost);
+
+writeln("Model finished running");
+
+writeln("------------------------------------------------------------");	
+writeln("Vessels used: \n");
 nVesselsUsed := 0;
 
 forall(vv in V) do
-	writeln("Vessel " + vv + ": " + getsol(delta(vv)));
+	writeln("Vessel " + vv + ": " + getsol(delta(vv)) + ". Cost: " + TimeCharterCost(vv));
 	if (getsol(delta(vv)) = 1) then
 		nVesselsUsed := nVesselsUsed + 1;
 	end-if	
-end-do
-	
-writeln("------------------------------------------------------------");
+end-do	
 
+writeln("------------------------------------------------------------");	
 writeln("Voyages sailed: \n");
-nVoyagesUsed := 0;
 
+nVoyagesUsed := 0;
 forall(vv in V, rr in Rv(vv), tt in T) do
 	if (getsol(x(vv,rr,tt)) = 1) then
-		writeln("Vessel " + vv + ", Voyage " + rr + ", " + Days(tt) + ". Cost: " + VoyageCost(rr) + ". Duration: " + VoyageDuration(rr));
+		writeln("Vessel " + vv + ", Voyage " + rr + ", " + DayNames(tt) + ". Cost: " + VoyageCost(rr) + ". Duration: " + VoyageDuration(rr));
 		nVoyagesUsed := nVoyagesUsed + 1;
 	end-if	
 end-do
@@ -191,5 +195,30 @@ forall(ii in N) do
 	visits := sum(vv in V, rr in Rvi(vv,ii), tt in T) getsol(x(vv,rr,tt));
 	writeln("Installation " + ii + ": " + visits + " out of " + RequiredVisits(ii) + " required visits");
 end-do
+
+writeln("------------------------------------------------------------");
+writeln("Departures to each installation:");
+
+write("\n\t\t");
+forall(tt in T) do
+	write(DayNames(tt) + "\t");
+end-do
+
+forall(ii in N) do
+	write("\nInstallation " + ii + ":");
+	
+	forall(tt in T) do
+		nDepartures := 0;
+		
+		forall(vv in V, rr in Rvi(vv, ii)| getsol(x(vv, rr,tt)) = 1) do
+			nDepartures := nDepartures + 1;
+		end-do
+		write("\t  " + string(nDepartures));
+		
+	end-do
+	
+	writeln("\n");
+end-do	
+
 
 end-model

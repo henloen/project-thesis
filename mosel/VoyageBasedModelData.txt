@@ -58,9 +58,9 @@ Nf : [
 ]
 
 ! Parameters
-VoyageCost: [37970, 44429, 39085, 45544, 43120, 49580]
+VoyageCost: [3.7970, 4.4429, 3.9085, 4.5544, 4.3120, 4.9580]
 VoyageDuration: [2, 2, 2, 2, 2, 2]
-TimeCharterCost: [120000, 125000, 130000, 110000, 104000]
+TimeCharterCost: [12.0000, 12.5000, 13.0000, 11.0000, 10.4000]
 RequiredVisits: [6, 5, 5]
 NumberOfDaysAvailable: [7, 7, 7, 7, 7]
 DepotCapacity: [3, 3, 3, 3, 3, 3, 3]
