@@ -221,9 +221,9 @@ public class Main {
 		}
 		for (int f = minFrequency; f <= maxFrequency; f++) {
 			ArrayList<Installation> installationList = new ArrayList<>();
-			for (Installation i : installations) {
-				if (i.getFrequency() == f) {
-					installationList.add(i);
+			for (int i = 1; i < installations.length; i++) {//starts at 1 to ignore the frequency of the depot
+				if (installations[i].getFrequency() == f) {
+					installationList.add(installations[i]);
 				}
 			}
 			installationSetsByFrequency.put(f, installationList);

@@ -1,5 +1,5 @@
 !Summary:
-!Execution time: 0,35 seconds
+!Execution time: 0,33 seconds
 !Total # voyages: 30 (6 unique)
 !Number of installations (excluding depot): 3
 !Number of time windows: 0
@@ -11,10 +11,10 @@
 !Max. duration: 80
 
 !Name: FarStar	 # voyages: 6
-!Name: FarSearcher	 # voyages: 6
-!Name: FarSymphony	 # voyages: 6
-!Name: FarSeeker	 # voyages: 6
 !Name: HavilaForesight	 # voyages: 6
+!Name: FarSearcher	 # voyages: 6
+!Name: FarSeeker	 # voyages: 6
+!Name: FarSymphony	 # voyages: 6
 !------------------------------------------------------------------------------------------------------------------------
 nV : 5
 nR : 6
