@@ -1,0 +1,66 @@
+!Summary:
+!Execution time: 0,34 seconds
+!Total # voyages: 70 (14 unique)
+!Number of installations (excluding depot): 4
+!Number of time windows: 0
+!Number of vessels: 5
+
+!Min. # installations: 1
+!Max. number of installations: 8
+!Min. duration: 56
+!Max. duration: 80
+
+!Name: FarStar	 # voyages: 14
+!Name: FarSearcher	 # voyages: 14
+!Name: FarSymphony	 # voyages: 14
+!Name: FarSeeker	 # voyages: 14
+!Name: HavilaForesight	 # voyages: 14
+!------------------------------------------------------------------------------------------------------------------------
+nV : 5
+nR : 14
+nN : 4
+nT : 7
+minL : 2
+maxL : 3
+
+! Sets: 
+Rv : [
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]!Vessel: FarSeeker
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]!Vessel: FarSearcher
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]!Vessel: FarSymphony
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]!Vessel: HavilaForesight
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]!Vessel: FarStar
+] 
+
+Rvi : [
+!i : 1, 2, 3, 4
+[1, 2, 4, 6, 8, 10, 12, 14], [2, 7, 8, 9, 10, 13, 14], [3, 4, 7, 8, 11, 12, 13, 14], [5, 6, 9, 10, 11, 12, 13, 14]!Vessel: FarSeeker
+[1, 2, 4, 6, 8, 10, 12, 14], [2, 7, 8, 9, 10, 13, 14], [3, 4, 7, 8, 11, 12, 13, 14], [5, 6, 9, 10, 11, 12, 13, 14]!Vessel: FarSearcher
+[1, 2, 4, 6, 8, 10, 12, 14], [2, 7, 8, 9, 10, 13, 14], [3, 4, 7, 8, 11, 12, 13, 14], [5, 6, 9, 10, 11, 12, 13, 14]!Vessel: FarSymphony
+[1, 2, 4, 6, 8, 10, 12, 14], [2, 7, 8, 9, 10, 13, 14], [3, 4, 7, 8, 11, 12, 13, 14], [5, 6, 9, 10, 11, 12, 13, 14]!Vessel: HavilaForesight
+[1, 2, 4, 6, 8, 10, 12, 14], [2, 7, 8, 9, 10, 13, 14], [3, 4, 7, 8, 11, 12, 13, 14], [5, 6, 9, 10, 11, 12, 13, 14]!Vessel: FarStar
+] 
+
+Rvl : [
+!l : 2, 3
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13], [12, 14]!Vessel: FarSeeker
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13], [12, 14]!Vessel: FarSearcher
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13], [12, 14]!Vessel: FarSymphony
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13], [12, 14]!Vessel: HavilaForesight
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13], [12, 14]!Vessel: FarStar
+] 
+
+minF : 5
+maxF : 6
+Nf : [
+!f : 5, 6
+[2, 3, 4], [1]
+]
+
+! Parameters
+VoyageCost: [37970, 44429, 39085, 45544, 64838, 73722, 43120, 49580, 73722, 80181, 74837, 81296, 78872, 85332]
+VoyageDuration: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3]
+TimeCharterCost: [120000, 125000, 130000, 110000, 104000]
+RequiredVisits: [6, 5, 5, 5]
+NumberOfDaysAvailable: [7, 7, 7, 7, 7]
+DepotCapacity: [3, 3, 3, 3, 3, 3, 3]

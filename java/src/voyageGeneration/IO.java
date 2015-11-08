@@ -21,9 +21,9 @@ import jxl.write.WritableWorkbook;
 
 public class IO {
 	private String inputFileName, outputFileName;
-	private int minNumberOfInstallations, maxNumberOfInstallations, numberOfNodes, numberOfInstallationAttributes, numberOfVessels, numberOfVesselAttributes, numberOfTimeWindows, minDuration, maxDuration, lengthOfPlanningPeriod;
+	private int minNumberOfInstallations, maxNumberOfInstallations, numberOfNodes, numberOfInstallationAttributes, numberOfVessels, numberOfVesselAttributes, numberOfTimeWindows, minDuration, maxDuration, lengthOfPlanningPeriod, firstRowOfProblemInstance, firstColumnOfProblemInstance;
 	private double loadFactor;
-	private ArrayList<Integer> timeCharterCost, numberOfDaysAvailable, depotCapacity;
+	private ArrayList<Integer> depotCapacity;
 	private String[][] installationsData;//each row consists of name, openingHour, closingHour, demand, frequency, serviceTime
 	private String[][] vesselsData;//each row consists of name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumtionDepot, fuelConsumptionInstallation
 	private String[][] distancesData;//corresponds to the distance matrix.
@@ -37,8 +37,6 @@ public class IO {
 	public IO(String inputFileName, String outputFileName) {
 		this.inputFileName = inputFileName;
 		this.outputFileName = outputFileName;
-		this.timeCharterCost = new ArrayList<Integer>();
-		this.numberOfDaysAvailable = new ArrayList<Integer>();
 		this.depotCapacity = new ArrayList<Integer>();
 		getParameters();
 	}
@@ -60,7 +58,7 @@ public class IO {
 		writeRvi(writer,installations, vessels, voyageSetByVesselAndInstallation);
 		writeRvl(writer, vessels, voyageSetByVesselAndDuration);
 		writeNf(writer, installationSetsByFrequency);
-		writeParameters(writer, voyageSet, installations);
+		writeParameters(writer, voyageSet, installations, vessels);
 		writer.close();
 	}
 	
@@ -88,7 +86,11 @@ public class IO {
 		DecimalFormat numberFormat = new DecimalFormat("0.00");
 		writer.println("!Summary:");
 		writer.println("!Execution time: " + numberFormat.format((double) executionTime/1000000000) + " seconds");
-		writer.println("!Total # voyages: " + voyageSet.size());
+		int totalNumberOfVoyages = 0;
+		for (Vessel v : voyageSetByVessel.keySet()) {
+			totalNumberOfVoyages += voyageSetByVessel.get(v).size();
+		}
+		writer.println("!Total # voyages: " + totalNumberOfVoyages + " (" + voyageSet.size() + " unique)");
 		writer.println("!Number of installations (excluding depot): " + (numberOfNodes - 1));
 		writer.println("!Number of time windows: " + (numberOfTimeWindows-1));//-1 because the depot has opening hours as well
 		writer.println("!Number of vessels: " + voyageSetByVessel.keySet().size() + "\n");
@@ -236,7 +238,7 @@ public class IO {
 		writer.println();
 	}
 	
-	private void writeParameters(PrintWriter writer, ArrayList<Voyage> voyageSet, Installation[] installations) {
+	private void writeParameters(PrintWriter writer, ArrayList<Voyage> voyageSet, Installation[] installations, Vessel[] vessels) {
 		writer.println("! Parameters");
 		writer.print("VoyageCost: [");
 		for (int i = 0; i < voyageSet.size(); i ++){
@@ -255,9 +257,9 @@ public class IO {
 		}
 		writer.println("]");
 		writer.print("TimeCharterCost: [");
-		for (int i = 0; i < timeCharterCost.size(); i++) {
-			writer.print(timeCharterCost.get(i));
-			if (i != timeCharterCost.size() - 1) {
+		for (int i = 0; i < vessels.length; i++) {
+			writer.print(vessels[i].getTimeCharterCost());
+			if (i != vessels.length - 1) {
 				writer.print(", ");
 			}
 		}
@@ -271,9 +273,9 @@ public class IO {
 		}
 		writer.println("]");
 		writer.print("NumberOfDaysAvailable: [");
-		for (int i = 0; i < numberOfDaysAvailable.size(); i++) {
-			writer.print(numberOfDaysAvailable.get(i));
-			if (i != (numberOfDaysAvailable.size()-1)) {
+		for (int i = 0; i < vessels.length; i++) {
+			writer.print(vessels[i].getNumberOfDaysAvailable());
+			if (i != (vessels.length-1)) {
 				writer.print(", ");
 			}
 		}
@@ -286,71 +288,6 @@ public class IO {
 			}
 		}
 		writer.println("]");
-	}
-	
-	//used for debugging
-	public void writeOutputToTextFile(HashMap<Vessel,List<Voyage>> voyageSet, HashMap<Vessel, HashMap<Installation, List<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, List<Voyage>>> voyageSetByVesselAndDuration,long executionTime) {
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, false), "UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Something went wrong when writing to output file");
-		}
-		DecimalFormat numberFormat = new DecimalFormat("0.00");
-		writer.println("!Summary:");
-		writer.println("!Execution time: " + numberFormat.format((double) executionTime/1000000000) + " seconds");
-		int totalNumberOfVoyages = 0;
-		for (Vessel v : voyageSet.keySet()) {
-			totalNumberOfVoyages += voyageSet.get(v).size();
-		}
-		writer.println("!Total # voyages: " + totalNumberOfVoyages);
-		writer.println("!Number of installations (excluding depot): " + (numberOfNodes - 1));
-		writer.println("!Number of time windows: " + (numberOfTimeWindows-1));//-1 because the depot has opening hours as well
-		writer.println("!Number of vessels: " + voyageSet.keySet().size() + "\n");
-		writer.println("!Min. # installations: " + minNumberOfInstallations);
-		writer.println("!Max. number of installations: " + maxNumberOfInstallations);
-		writer.println("!Min. duration: " + minDuration);
-		writer.println("!Max. duration: " + maxDuration + "\n");
-		for (Vessel v : voyageSet.keySet()) {
-			writer.println("!Name: " + v.getName() + "\t # voyages: " + voyageSet.get(v).size());
-		}
-		writer.println("!------------------------------------------------------------------------------------------------------------------------");
-		for (Vessel v : voyageSet.keySet()) {
-			writer.println("!Vessel: " + v.getName());
-			writer.println("Voyages: ");
-			for (Voyage l : voyageSet.get(v)) {
-				writer.println(l.getFullText());
-			}
-			writer.println("------------------------------------------------------------------------------------------------------------------------");
-		}
-		
-		writer.println("------------------------------------------------------------------------------------------------------------------------");
-		for (Vessel v : voyageSetByVesselAndInstallation.keySet()) {
-			writer.println("Vessel: " + v.getName());
-			for (Installation i : voyageSetByVesselAndInstallation.get(v).keySet()) {
-				writer.println("Installation: " + i.getName() + " (" + i.getNumber() + ")");
-				writer.println("Voyages: ");
-				for (Voyage l : voyageSetByVesselAndInstallation.get(v).get(i)) {
-					writer.println(l.getFullText());
-				}
-			}
-			writer.println("------------------------------------------------------------------------------------------------------------------------");
-		}
-		
-		writer.println("------------------------------------------------------------------------------------------------------------------------");
-		for (Vessel v : voyageSetByVesselAndDuration.keySet()) {
-			writer.println("Vessel: " + v.getName());
-			for (Integer d : voyageSetByVesselAndDuration.get(v).keySet()) {
-				writer.println("Duration: " + d);
-				writer.println("Voyages: ");
-				for (Voyage l : voyageSetByVesselAndDuration.get(v).get(d)) {
-					writer.println(l.getFullText());
-				}
-			}
-			writer.println("------------------------------------------------------------------------------------------------------------------------");
-		}
-		
 	}
 	
 	
@@ -366,7 +303,9 @@ public class IO {
 			double fuelConsumptionSailing = Double.parseDouble(data[4]);
 			double fuelConsumptionDepot = Double.parseDouble(data[5]);
 			double fuelConsumptionInstallation = Double.parseDouble(data[6]);
-			vessels[i] = new Vessel(name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation);
+			int timeCharterCost= Integer.parseInt(data[7]);
+			int numberOfDaysAvailable = Integer.parseInt(data[8]);
+			vessels[i] = new Vessel(name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation, timeCharterCost, numberOfDaysAvailable);
 		}
 		return vessels;
 	}
@@ -390,7 +329,7 @@ public class IO {
 			Sheet sheet = workbook.getSheet(0);//installations data is expected in the first sheet
 			for (int i=0; i<numberOfNodes;i++) {
 				for (int j=0;j<numberOfInstallationAttributes;j++) {
-					installationsData[i][j] = sheet.getCell(j,i+18).getContents();//add 18 because the installations start at row 19 
+					installationsData[i][j] = sheet.getCell((firstColumnOfProblemInstance-1) + j,(firstRowOfProblemInstance-1)+ i).getContents();//add 16 because the installations start at row 17 
 				}
 			}
 		} catch (Exception e) {
@@ -406,8 +345,9 @@ public class IO {
 			Sheet sheet = workbook.getSheet(1);//vessel data is expected in the second sheet
 			for (int i=0; i<numberOfVessels;i++) {
 				for (int j=0;j<numberOfVesselAttributes;j++) {
-					vesselsData[i][j] = sheet.getCell(j,i+2).getContents();//add 2 because the installations start at row 3 
+					vesselsData[i][j] = sheet.getCell(j,i+4).getContents();//add 4 because the installations start at row 5 
 				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -434,28 +374,33 @@ public class IO {
 	public void getParameters() {
 		try {
 			Workbook workbook = Workbook.getWorkbook(new File(inputFileName));
-			Sheet sheet = workbook.getSheet(0);//parameters is expected in the first sheet
-			int startColumn = 1;//the column of parameters 
-			int startRow = 0;//the first row of parameters
-			this.minNumberOfInstallations= Integer.parseInt(sheet.getCell(startColumn,startRow).getContents());
-			this.maxNumberOfInstallations= Integer.parseInt(sheet.getCell(startColumn,startRow + 1).getContents());
-			this.numberOfNodes = Integer.parseInt(sheet.getCell(startColumn,startRow + 2).getContents());
-			this.numberOfInstallationAttributes = Integer.parseInt(sheet.getCell(startColumn,startRow + 3).getContents());
-			this.numberOfVessels = Integer.parseInt(sheet.getCell(startColumn,startRow + 4).getContents());;
-			this.numberOfVesselAttributes = Integer.parseInt(sheet.getCell(startColumn,startRow + 5).getContents());
-			this.loadFactor = Double.parseDouble(sheet.getCell(startColumn,startRow + 6).getContents());
-			this.minDuration = Integer.parseInt(sheet.getCell(startColumn,startRow + 7).getContents());
-			this.maxDuration = Integer.parseInt(sheet.getCell(startColumn,startRow + 8).getContents());
-			this.lengthOfPlanningPeriod = Integer.parseInt(sheet.getCell(startColumn,startRow + 9).getContents());
+			Sheet installationSheet = workbook.getSheet(0);//installation parameters are expected in the first sheet
+			int startColumnInstallation = 1;//the column of parameters 
+			int startRowInstallation = 0;//the first row of parameters
+			this.minNumberOfInstallations= Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation).getContents());
+			this.maxNumberOfInstallations= Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 1).getContents());
+			this.loadFactor = Double.parseDouble(installationSheet.getCell(startColumnInstallation,startRowInstallation + 2).getContents());
+			this.minDuration = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 3).getContents());
+			this.maxDuration = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 4).getContents());
+			this.lengthOfPlanningPeriod = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 5).getContents());
 			
-			Sheet sheet3 = workbook.getSheet(2); //the parameters for the voyage based formulation is expected in sheet 3
-			int startColumn2 = 2;
-			for (int i = 0; i < numberOfVessels; i++) {
-				timeCharterCost.add(Integer.parseInt(sheet3.getCell(startColumn2+i, 1).getContents()));
-				numberOfDaysAvailable.add(Integer.parseInt(sheet3.getCell(startColumn2+i, 2).getContents()));
-			}
+			this.numberOfNodes = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 7).getContents());
+			this.numberOfInstallationAttributes = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 8).getContents());
+			this.firstRowOfProblemInstance = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 9).getContents());
+			this.firstColumnOfProblemInstance = Integer.parseInt(installationSheet.getCell(startColumnInstallation,startRowInstallation + 10).getContents());
+			
+			Sheet vesselSheet = workbook.getSheet(1); //vessel parameters are expected in the second sheet
+			int startColumnVessel = 1;
+			int startRowVessel = 0;
+			this.numberOfVessels = Integer.parseInt(vesselSheet.getCell(startColumnVessel,startRowVessel).getContents());;
+			this.numberOfVesselAttributes = Integer.parseInt(vesselSheet.getCell(startColumnVessel,startRowVessel + 1).getContents());
+			
+			
+			Sheet xpressSheet = workbook.getSheet(2); //parameters for the voyage based formulation is expected in sheet 3
+			int startColumnXpress = 1;
+			int startRowXpress = 0;
 			for (int i = 0; i < lengthOfPlanningPeriod; i++) {
-				depotCapacity.add(Integer.parseInt(sheet3.getCell(startColumn2+i, 3).getContents()));
+				depotCapacity.add(Integer.parseInt(xpressSheet.getCell(startColumnXpress+i, startRowXpress).getContents()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

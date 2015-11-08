@@ -2,14 +2,14 @@ package voyageGeneration;
 
 public class Vessel implements Comparable<Vessel>{
 	private String name;
-	private int capacity, speed, unitFuelCost;
+	private int capacity, speed, unitFuelCost, timeCharterCost, numberOfDaysAvailable;
 	private double fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation;
 	
 	
 
 	public Vessel(String name, int capacity, int speed, int unitFuelCost,
 			double fuelConsumptionSailing, double fuelConsumptionDepot,
-			double fuelConsumptionInstallation) {
+			double fuelConsumptionInstallation, int timeCharterCost, int numberOfDaysAvailable) {
 		this.name = name;
 		this.capacity = capacity;
 		this.speed = speed;
@@ -17,6 +17,8 @@ public class Vessel implements Comparable<Vessel>{
 		this.fuelConsumptionSailing = fuelConsumptionSailing;
 		this.fuelConsumptionDepot = fuelConsumptionDepot;
 		this.fuelConsumptionInstallation = fuelConsumptionInstallation;
+		this.timeCharterCost = timeCharterCost;
+		this.numberOfDaysAvailable = numberOfDaysAvailable;
 	}
 
 	public String getName() {
@@ -43,6 +45,15 @@ public class Vessel implements Comparable<Vessel>{
 		return fuelConsumptionInstallation*unitFuelCost;
 	}
 	
+	
+	public int getTimeCharterCost() {
+		return timeCharterCost;
+	}
+
+	public int getNumberOfDaysAvailable() {
+		return numberOfDaysAvailable;
+	}
+
 	public int compareTo(Vessel otherVessel) {
 		return (otherVessel.capacity - capacity);
 	}
