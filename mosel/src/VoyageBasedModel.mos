@@ -1,9 +1,11 @@
 model VoyageBasedModel
-uses  "mmxprs"; ! Use Xpress-Optimizer
+uses  "mmxprs", "mmsystem"; ! Use Xpress-Optimizer
 
 parameters
 	 ! Input file is specified here
-	 DataFile = 'VoyageBasedModelData.txt';
+	 DataFilePath = '..\data\input\';
+	 ProblemInstance = '3-0';
+	 DataFile = DataFilePath + ProblemInstance + '.txt';
 end-parameters
 
 declarations
@@ -69,7 +71,7 @@ Pf_min :: [0, 0, 1, 2, 1, 0, 0] ! Minimum no of departures to an installation in
 Pf_max :: [1, 1, 3, 4, 2, 1, 1] ! Maximum no of departures to an installation in the horizon hf
 
 ! DayNames is used to make output more readable
-DayNames :: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+DayNames :: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 initializations from DataFile
 	! Sets
@@ -151,74 +153,89 @@ forall(ff in F, ii in Nf(ff), tt in T) do
 	!)
 end-do
 
-
-
-writeln("------------------------------------------------------------");
 writeln("Begin running model...")
-
 
 minimize(TotalCost);
 
 writeln("Model finished running");
 
-writeln("------------------------------------------------------------");	
-writeln("Vessels used: \n");
-nVesselsUsed := 0;
+setparam("datetimefmt", "%.y-%0m-%0d %0H.%0M");
+DateTime := datetime(SYS_NOW);
 
-forall(vv in V) do
-	writeln("Vessel " + vv + ": " + getsol(delta(vv)) + ". Cost: " + TimeCharterCost(vv));
-	if (getsol(delta(vv)) = 1) then
-		nVesselsUsed := nVesselsUsed + 1;
-	end-if	
-end-do	
+OutputFile := string(DateTime) + ' ' + ProblemInstance + '.txt';
+writeln("Writing output to " + OutputFile);
 
-writeln("------------------------------------------------------------");	
-writeln("Voyages sailed: \n");
-
-nVoyagesUsed := 0;
-forall(vv in V, rr in Rv(vv), tt in T) do
-	if (getsol(x(vv,rr,tt)) = 1) then
-		writeln("Vessel " + vv + ", Voyage " + rr + ", " + DayNames(tt) + ". Cost: " + VoyageCost(rr) + ". Duration: " + VoyageDuration(rr));
-		nVoyagesUsed := nVoyagesUsed + 1;
-	end-if	
-end-do
-
-writeln("------------------------------------------------------------");
-writeln("Objective value: " + getobjval);
-writeln("Charter cost: " + sum(vv in V) TimeCharterCost(vv)*getsol(delta(vv)));
-writeln("Sailing cost: " + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * getsol(x(vv,rr,tt))); 
-writeln("Number of vessels used: " + nVesselsUsed);
-writeln("Number of voyages sailed: " + nVoyagesUsed);
-
-writeln("------------------------------------------------------------");
-forall(ii in N) do
-	visits := sum(vv in V, rr in Rvi(vv,ii), tt in T) getsol(x(vv,rr,tt));
-	writeln("Installation " + ii + ": " + visits + " out of " + RequiredVisits(ii) + " required visits");
-end-do
-
-writeln("------------------------------------------------------------");
-writeln("Departures to each installation:");
-
-write("\n\t\t");
-forall(tt in T) do
-	write(DayNames(tt) + "\t");
-end-do
-
-forall(ii in N) do
-	write("\nInstallation " + ii + ":");
+fopen('..\data\output\' + OutputFile, F_OUTPUT);
 	
-	forall(tt in T) do
-		nDepartures := 0;
-		
-		forall(vv in V, rr in Rvi(vv, ii)| getsol(x(vv, rr,tt)) = 1) do
-			nDepartures := nDepartures + 1;
-		end-do
-		write("\t  " + string(nDepartures));
-		
+	(!TODO:
+	
+	Vessels used
+	Voyages used
+	CPU voymodel(i.e. runtime)
+	Opt gap
+	!)
+	
+	
+	writeln("Problem instance: " + ProblemInstance);
+	writeln("Solved on: " + DateTime);
+	
+	writeln("------------------------------------------------------------");	
+	writeln("Vessels used: \n");
+	nVesselsUsed := 0;
+	
+	forall(vv in V) do
+		writeln("Vessel " + vv + ": " + getsol(delta(vv)) + ". Cost: " + TimeCharterCost(vv));
+		if (getsol(delta(vv)) = 1) then
+			nVesselsUsed := nVesselsUsed + 1;
+		end-if	
+	end-do	
+	
+	writeln("------------------------------------------------------------");	
+	writeln("Voyages sailed: \n");
+	
+	nVoyagesUsed := 0;
+	forall(vv in V, rr in Rv(vv), tt in T) do
+		if (getsol(x(vv,rr,tt)) = 1) then
+			writeln("Vessel " + vv + ", Voyage " + rr + ", " + DayNames(tt) + ". Cost: " + VoyageCost(rr) + ". Duration: " + VoyageDuration(rr));
+			nVoyagesUsed := nVoyagesUsed + 1;
+		end-if	
 	end-do
 	
-	writeln("\n");
-end-do	
-
+	writeln("------------------------------------------------------------");
+	writeln("Objective value: " + getobjval);
+	writeln("Charter cost:\t " + sum(vv in V) TimeCharterCost(vv)*getsol(delta(vv)));
+	writeln("Sailing cost:\t " + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * getsol(x(vv,rr,tt))); 
+	writeln("Number of vessels used:\t" + nVesselsUsed);
+	writeln("Number of voyages sailed: " + nVoyagesUsed);
+	
+	writeln("------------------------------------------------------------");
+	forall(ii in N) do
+		visits := sum(vv in V, rr in Rvi(vv,ii), tt in T) getsol(x(vv,rr,tt));
+		writeln("Installation " + ii + ": " + visits + " out of " + RequiredVisits(ii) + " required visits");
+	end-do
+	
+	writeln("------------------------------------------------------------");
+	writeln("Departures to each installation:");
+	
+	write("\n\t\t");
+	forall(tt in T) do
+		write(DayNames(tt) + "\t");
+	end-do
+	
+	forall(ii in N) do
+		write("\nInstallation " + ii + ":");
+		
+		forall(tt in T) do
+			nDepartures := 0;
+			
+			forall(vv in V, rr in Rvi(vv, ii)| getsol(x(vv, rr,tt)) = 1) do
+				nDepartures := nDepartures + 1;
+			end-do
+			write("\t  " + string(nDepartures));
+			
+		end-do
+	end-do	
+	
+fclose(F_OUTPUT);
 
 end-model
