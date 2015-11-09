@@ -4,8 +4,9 @@ uses  "mmxprs", "mmsystem"; ! Use Xpress-Optimizer
 parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
+	 InputDate = '2015-11-08 ';
 	 ProblemInstance = '3-0';
-	 DataFile = DataFilePath + ProblemInstance + '.txt';
+	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 end-parameters
 
 declarations
@@ -178,6 +179,8 @@ fopen('..\data\output\' + OutputFile, F_OUTPUT);
 	
 	writeln("Problem instance: " + ProblemInstance);
 	writeln("Solved on: " + DateTime);
+	writeln("CPU time: ");
+	writeln("Optimality gap:");
 	
 	writeln("------------------------------------------------------------");	
 	writeln("Vessels used: \n");
