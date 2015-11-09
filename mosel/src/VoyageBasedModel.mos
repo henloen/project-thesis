@@ -5,7 +5,7 @@ parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
 	 InputDate = '2015-11-08 ';
-	 ProblemInstance = '4-0';
+	 ProblemInstance = '10-0';
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 end-parameters
 
@@ -95,6 +95,7 @@ initializations from DataFile
 	NumberOfDaysAvailable;
  	DepotCapacity;
 end-initializations
+
 
 !Creating variables
 forall(vv in V) do
