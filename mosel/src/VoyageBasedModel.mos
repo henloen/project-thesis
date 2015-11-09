@@ -5,7 +5,7 @@ parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
 	 InputDate = '2015-11-08 ';
-	 ProblemInstance = '3-0';
+	 ProblemInstance = '4-0';
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 end-parameters
 
@@ -34,7 +34,7 @@ end-initializations
 
 V := 1 .. nV;
 N := 1 .. nN;
-F := minF .. maxF;
+Frequency := minF .. maxF;
 T := 0 .. nT-1; ! Zero-indexed due to use of modulus operator in spread of departures constraints
 L := minL .. maxL;
 R := 1 .. nR;
@@ -43,8 +43,8 @@ declarations
 	! Sets
 	Rv: array(V) of set of integer; ! Voyages a vessel can sail
 	Rvi: array(V, N) of set of integer; ! Voyages a vessel can sail that visit installation i
-	Rvl: array(V, N) of set of integer; ! Voyages a vessel can sail that has duration l
-	Nf: array(F) of set of integer; ! Sets of installations requiring f visits
+	Rvl: array(V, L) of set of integer; ! Voyages a vessel can sail that has duration l
+	Nf: array(Frequency) of set of integer; ! Sets of installations requiring f visits
 	
 	! Parameters
 	TimeCharterCost: array(V) of real; ! C^(TC)
@@ -115,8 +115,8 @@ declarations
 	AvailableDaysCon: dynamic array(V) of linctr; ! (4.3) Each vessel does not sail more days than allowed
 	DepotCapacityCon: dynamic array(T) of linctr; ! (4.4)
 	ReturnBeforeNewVoyageCon: dynamic array(V, T, L) of linctr; ! (4.5) Vessel does not begin a new voyage before it has returned from its last voyage
-	SpreadDeparturesMinCon: dynamic array(N, F, T) of linctr; ! (4.6) - Lower bound
-	SpreadDeparturesMaxCon: dynamic array(N, F, T) of linctr; ! (4.6) - Upper bound
+	SpreadDeparturesMinCon: dynamic array(N, Frequency, T) of linctr; ! (4.6) - Lower bound
+	SpreadDeparturesMaxCon: dynamic array(N, Frequency, T) of linctr; ! (4.6) - Upper bound
 end-declarations
 
 ! (4.1)
@@ -143,7 +143,7 @@ forall(vv in V, tt in T, ll in L) do
 end-do
 
 ! (4.6)
-forall(ff in F, ii in Nf(ff), tt in T) do
+forall(ff in Frequency, ii in Nf(ff), tt in T) do
 	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 

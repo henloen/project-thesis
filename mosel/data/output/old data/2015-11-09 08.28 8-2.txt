@@ -1,0 +1,48 @@
+Problem instance: 8-2
+Solved on: 2015-11-09 08.28
+CPU time: 1.1 s
+Optimality gap: 0% (0.00013093% and "Solution is optimal")
+------------------------------------------------------------
+Vessels used: 
+
+Vessel 1: 0. Cost: 120000
+Vessel 2: 0. Cost: 125000
+Vessel 3: 0. Cost: 130000
+Vessel 4: 1. Cost: 110000
+Vessel 5: 1. Cost: 104000
+------------------------------------------------------------
+Voyages sailed: 
+
+Vessel 4, Voyage 185, Thu. Cost: 98360. Duration: 3
+Vessel 4, Voyage 204, Sat. Cost: 58876. Duration: 2
+Vessel 4, Voyage 205, Tue. Cost: 96239. Duration: 3
+Vessel 5, Voyage 205, Fri. Cost: 96239. Duration: 3
+Vessel 5, Voyage 228, Wed. Cost: 95936. Duration: 3
+Vessel 5, Voyage 238, Sun. Cost: 104117. Duration: 3
+------------------------------------------------------------
+Objective value: 763767
+Charter cost:	 214000
+Sailing cost:	 549767
+Number of vessels used:	2
+Number of voyages sailed: 6
+------------------------------------------------------------
+Installation 1: 6 out of 6 required visits
+Installation 2: 5 out of 5 required visits
+Installation 3: 5 out of 5 required visits
+Installation 4: 5 out of 5 required visits
+Installation 5: 2 out of 2 required visits
+Installation 6: 2 out of 2 required visits
+Installation 7: 5 out of 5 required visits
+Installation 8: 6 out of 6 required visits
+------------------------------------------------------------
+Departures to each installation:
+
+		Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+Installation 1:	  0	  1	  1	  1	  1	  1	  1
+Installation 2:	  0	  1	  1	  1	  1	  0	  1
+Installation 3:	  0	  1	  0	  1	  1	  1	  1
+Installation 4:	  0	  1	  1	  1	  1	  0	  1
+Installation 5:	  0	  0	  0	  1	  0	  0	  1
+Installation 6:	  0	  0	  1	  0	  0	  1	  0
+Installation 7:	  0	  1	  1	  0	  1	  1	  1
+Installation 8:	  0	  1	  1	  1	  1	  1	  1
