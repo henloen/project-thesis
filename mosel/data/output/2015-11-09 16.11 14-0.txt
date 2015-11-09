@@ -1,0 +1,62 @@
+Problem instance: 14-0
+Solved on: 2015-11-09 16.11
+CPU time: 6297.6s
+Optimality gap: 1.10352% (stopped manually)
+------------------------------------------------------------
+Vessels used: 
+
+Vessel 1: 1. Cost: 120000
+Vessel 2: 1. Cost: 125000
+Vessel 3: 0. Cost: 130000
+Vessel 4: 1. Cost: 110000
+Vessel 5: 1. Cost: 104000
+------------------------------------------------------------
+Voyages sailed: 
+
+Vessel 1, Voyage 6406, Wed. Cost: 113206. Duration: 3
+Vessel 1, Voyage 7412, Sun. Cost: 73419. Duration: 3
+Vessel 2, Voyage 6519, Sat. Cost: 112600. Duration: 3
+Vessel 2, Voyage 7617, Tue. Cost: 111897. Duration: 3
+Vessel 4, Voyage 6924, Mon. Cost: 113509. Duration: 3
+Vessel 4, Voyage 7860, Fri. Cost: 112200. Duration: 3
+Vessel 5, Voyage 4678, Thu. Cost: 64329. Duration: 2
+Vessel 5, Voyage 5515, Mon. Cost: 63784. Duration: 2
+------------------------------------------------------------
+Objective value: 1.22394e+006
+Charter cost:	 459000
+Sailing cost:	 764944
+Number of vessels used:	4
+Number of voyages sailed: 8
+------------------------------------------------------------
+Installation 1: 6 out of 6 required visits
+Installation 2: 5 out of 5 required visits
+Installation 3: 5 out of 5 required visits
+Installation 4: 5 out of 5 required visits
+Installation 5: 2 out of 2 required visits
+Installation 6: 2 out of 2 required visits
+Installation 7: 5 out of 5 required visits
+Installation 8: 6 out of 6 required visits
+Installation 9: 6 out of 6 required visits
+Installation 10: 1 out of 1 required visits
+Installation 11: 4 out of 4 required visits
+Installation 12: 4 out of 4 required visits
+Installation 13: 4 out of 4 required visits
+Installation 14: 4 out of 4 required visits
+------------------------------------------------------------
+Departures to each installation:
+
+		Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+Installation 1:	  1	  1	  1	  1	  0	  1	  1
+Installation 2:	  2	  0	  1	  0	  1	  1	  0
+Installation 3:	  1	  1	  1	  1	  0	  1	  0
+Installation 4:	  1	  1	  1	  0	  1	  1	  0
+Installation 5:	  1	  0	  0	  0	  1	  0	  0
+Installation 6:	  0	  0	  0	  1	  0	  0	  1
+Installation 7:	  1	  1	  1	  0	  1	  0	  1
+Installation 8:	  1	  1	  0	  1	  1	  1	  1
+Installation 9:	  1	  1	  1	  0	  1	  1	  1
+Installation 10:	  1	  0	  0	  0	  0	  0	  0
+Installation 11:	  1	  0	  1	  0	  1	  0	  1
+Installation 12:	  1	  1	  0	  0	  1	  1	  0
+Installation 13:	  1	  1	  0	  1	  0	  1	  0
+Installation 14:	  1	  0	  1	  1	  0	  0	  1

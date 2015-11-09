@@ -1,7 +1,7 @@
 Problem instance: 11-0
-Solved on: 2015-11-09 11.12
-CPU time: 92.5
-Optimality gap: 0.000199337%
+Solved on: 2015-11-09 11.22
+CPU time: 92.1
+Optimality gap: 0.000199337
 ------------------------------------------------------------
 Vessels used: 
 
@@ -16,13 +16,16 @@ Voyages sailed:
 Vessel 1, Voyage 962, Mon. Cost: 108662. Duration: 3
 Vessel 1, Voyage 1470, Thu. Cost: 112297. Duration: 3
 Vessel 4, Voyage 1036, Fri. Cost: 63784. Duration: 2
+Vessel 4, Voyage 1323, Sun. Cost: 67662. Duration: 2
+Vessel 4, Voyage 1485, Tue. Cost: 112600. Duration: 3
+Vessel 5, Voyage 952, Wed. Cost: 100687. Duration: 3
 Vessel 5, Voyage 1024, Sat. Cost: 103511. Duration: 3
 ------------------------------------------------------------
 Objective value: 1.0032e+006
 Charter cost:	 334000
 Sailing cost:	 669203
 Number of vessels used:	3
-Number of voyages sailed: 4
+Number of voyages sailed: 7
 ------------------------------------------------------------
 Installation 1: 6 out of 6 required visits
 Installation 2: 5 out of 5 required visits
@@ -39,14 +42,14 @@ Installation 11: 4 out of 4 required visits
 Departures to each installation:
 
 		Mon	Tue	Wed	Thu	Fri	Sat	Sun	
-Installation 1:	  1	  0	  0	  1	  0	  1	  0
-Installation 2:	  1	  0	  0	  1	  1	  1	  0
-Installation 3:	  1	  0	  0	  1	  0	  1	  0
-Installation 4:	  1	  0	  0	  1	  0	  1	  0
-Installation 5:	  0	  0	  0	  0	  0	  1	  0
+Installation 1:	  1	  1	  1	  1	  0	  1	  1
+Installation 2:	  1	  1	  0	  1	  1	  1	  0
+Installation 3:	  1	  0	  1	  1	  0	  1	  1
+Installation 4:	  1	  1	  1	  1	  0	  1	  0
+Installation 5:	  0	  1	  0	  0	  0	  1	  0
 Installation 6:	  1	  0	  0	  0	  1	  0	  0
-Installation 7:	  0	  0	  0	  1	  1	  0	  0
-Installation 8:	  1	  0	  0	  1	  0	  1	  0
-Installation 9:	  1	  0	  0	  1	  1	  0	  0
+Installation 7:	  0	  1	  1	  1	  1	  0	  1
+Installation 8:	  1	  1	  1	  1	  0	  1	  1
+Installation 9:	  1	  1	  1	  1	  1	  0	  1
 Installation 10:	  0	  0	  0	  0	  1	  0	  0
-Installation 11:	  0	  0	  0	  1	  0	  1	  0
+Installation 11:	  0	  1	  0	  1	  0	  1	  1
