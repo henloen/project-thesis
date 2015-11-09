@@ -5,7 +5,7 @@ parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
 	 InputDate = '2015-11-08 ';
-	 ProblemInstance = '4-0';
+	 ProblemInstance = '11-3';
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 end-parameters
 
@@ -188,7 +188,7 @@ fopen('..\data\output\' + OutputFile, F_OUTPUT);
 	
 	forall(vv in V) do
 		writeln("Vessel " + vv + ": " + getsol(delta(vv)) + ". Cost: " + TimeCharterCost(vv));
-		if (getsol(delta(vv)) = 1) then
+		if (getsol(delta(vv)) > 0.5) then
 			nVesselsUsed := nVesselsUsed + 1;
 		end-if	
 	end-do	
@@ -198,7 +198,7 @@ fopen('..\data\output\' + OutputFile, F_OUTPUT);
 	
 	nVoyagesUsed := 0;
 	forall(vv in V, rr in Rv(vv), tt in T) do
-		if (getsol(x(vv,rr,tt)) = 1) then
+		if (getsol(x(vv,rr,tt)) > 0.5) then
 			writeln("Vessel " + vv + ", Voyage " + rr + ", " + DayNames(tt) + ". Cost: " + VoyageCost(rr) + ". Duration: " + VoyageDuration(rr));
 			nVoyagesUsed := nVoyagesUsed + 1;
 		end-if	
@@ -231,7 +231,7 @@ fopen('..\data\output\' + OutputFile, F_OUTPUT);
 		forall(tt in T) do
 			nDepartures := 0;
 			
-			forall(vv in V, rr in Rvi(vv, ii)| getsol(x(vv, rr,tt)) = 1) do
+			forall(vv in V, rr in Rvi(vv, ii)| getsol(x(vv, rr,tt)) > 0.5) do
 				nDepartures := nDepartures + 1;
 			end-do
 			write("\t  " + string(nDepartures));
