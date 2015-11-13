@@ -1,15 +1,16 @@
-package voyageGeneration;
+package voyageGenerationDP;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Voyage implements Comparable<Voyage> {
 	
 	private double cost,capacityUsed, departureTime;
 	private int number;
-	private int[] visited;
+	private ArrayList<Integer> visited;
 	private static int numberOfVoyages= 0;
 	
-	public Voyage(double cost, double capacityUsed, double departureTime, int[] visited) {
+	public Voyage(double cost, double capacityUsed, double departureTime, ArrayList<Integer> visited) {
 		super();
 		this.cost = cost;
 		this.capacityUsed = capacityUsed;
@@ -31,7 +32,7 @@ public class Voyage implements Comparable<Voyage> {
 	public int getNumber() {
 		return number;
 	}
-	public int[] getVisited() {
+	public ArrayList<Integer> getVisited() {
 		return visited;
 	}
 	public static int getNumberOfVoyages() {
@@ -41,10 +42,12 @@ public class Voyage implements Comparable<Voyage> {
 	public String getFullText() {
 		DecimalFormat numberFormat = new DecimalFormat("#.00");
 		String string = "number: " + number + "\t cost: " + numberFormat.format(cost) + "\t capacityUsed: " + numberFormat.format(capacityUsed) + "\t departureTime: " + departureTime + "\t visited: ";
-		for (int i=0;i<visited.length-1;i++) {
-			string+=visited[i] + "-";
+		for (int i = 0; i < visited.size(); i++) {
+			string += visited.get(i);
+			if (i != (visited.size() - 1)) {
+				string+="-";
+			}
 		}
-		string+= visited[visited.length-1];
 		return string;
 	}
 	

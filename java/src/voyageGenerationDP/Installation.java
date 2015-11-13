@@ -1,7 +1,6 @@
-package voyageGeneration;
+package voyageGenerationDP;
 
 public class Installation {
-	
 	private String name;
 	private int number, frequency;
 	private double demand, openingHour, closingHour, serviceTime;
@@ -63,5 +62,4 @@ public class Installation {
 	public String toString() {
 		return ""+number;
 	}
-
 }

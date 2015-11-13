@@ -1,4 +1,4 @@
-package voyageGeneration;
+package voyageGenerationDP;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -13,13 +13,10 @@ import java.util.List;
 
 import jxl.Sheet;
 import jxl.Workbook;
-/*
-import jxl.write.WritableCell;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-*/
+
 
 public class IO {
+	
 	private String inputFileName, outputFileName;
 	private int minNumberOfInstallations, maxNumberOfInstallations, numberOfNodes, numberOfInstallationAttributes, numberOfVessels, numberOfVesselAttributes, numberOfTimeWindows, minDuration, maxDuration, lengthOfPlanningPeriod, firstRowOfProblemInstance, firstColumnOfProblemInstance;
 	private double loadFactor;
@@ -42,7 +39,7 @@ public class IO {
 	}
 	
 
-	public void writeOutputToDataFile(Installation[] installations, Vessel[] vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,List<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, List<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, List<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime) {
+	public void writeOutputToDataFile(ArrayList<Installation> installations, ArrayList<Vessel> vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime) {
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, true), "UTF-8");
@@ -62,27 +59,7 @@ public class IO {
 		writer.close();
 	}
 	
-	
-	public Installation[] getInstallations() {
-		getInstallationsData();
-		Installation[] installations = new Installation[installationsData.length];
-		for (int i=0;i<installationsData.length;i++) {
-			String[] data = installationsData[i];
-			String name = data[0];
-			double openingHour = Double.parseDouble(data[1]);
-			double closingHour = Double.parseDouble(data[2]);
-			double demand = Integer.parseInt(data[3]) * loadFactor;//adjust the demand with the load factor
-			int frequency = Integer.parseInt(data[4]);
-			double serviceTime = Double.parseDouble(data[5]);
-			installations[i] = new Installation(name, openingHour, closingHour, demand, frequency, serviceTime, i);
-			if (openingHour != 0 || closingHour != 24) {//added for the printing of the solution 
-				numberOfTimeWindows ++;
-			}
-		}
-		return installations;
-	}
-	
-	private void writeSummary(PrintWriter writer, ArrayList<Voyage> voyageSet, HashMap<Vessel,List<Voyage>> voyageSetByVessel, long executionTime) {
+	private void writeSummary(PrintWriter writer, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, long executionTime) {
 		DecimalFormat numberFormat = new DecimalFormat("0.00");
 		writer.println("!Summary:");
 		writer.println("!Execution time: " + numberFormat.format((double) executionTime/1000000000) + " seconds");
@@ -103,20 +80,19 @@ public class IO {
 		}
 	}
 	
-	private void writeSimpleSets(PrintWriter writer, ArrayList<Voyage> voyageSet, Vessel[] vessels, Installation[] installations) {
-		writer.println("nV : " + vessels.length);
+	private void writeSimpleSets(PrintWriter writer, ArrayList<Voyage> voyageSet, ArrayList<Vessel> vessels, ArrayList<Installation> installations) {
+		writer.println("nV : " + vessels.size());
 		writer.println("nR : " + voyageSet.size());
-		writer.println("nN : " + (installations.length - 1)); //node 0 is the depot and should be excluded
+		writer.println("nN : " + (installations.size() - 1)); //node 0 is the depot and should be excluded
 		writer.println("nT : " + lengthOfPlanningPeriod);
 		writer.println("minL : " + ((minDuration - 8) / 24)); // the max duration is converted from hours to days
 		writer.println("maxL : " + ((maxDuration - 8) / 24)); // the max duration is converted from hours to days
 		writer.print("\n");
 	}
 	
-	private void writeRv(PrintWriter writer, Vessel[] vessels, HashMap<Vessel,List<Voyage>> voyageSetByVessel) {
+	private void writeRv(PrintWriter writer, ArrayList<Vessel> vessels, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel) {
 		writer.println("Rv : [");
-		for (int i = 0; i < vessels.length; i++) {
-			Vessel vessel = vessels[i];
+		for (Vessel vessel : vessels) {
 			writer.print("[");
 			List<Voyage> voyages = voyageSetByVessel.get(vessel);
 			for (int j = 0; j < voyages.size() - 1; j++) { //don't want to print ", " after the last voyage, therefore we use -1
@@ -129,20 +105,20 @@ public class IO {
 		writer.println("] \n");
 	}
 	
-	private void writeRvi(PrintWriter writer, Installation[] installations, Vessel[] vessels,  HashMap<Vessel, HashMap<Installation, List<Voyage>>> voyageSetByVesselAndInstallation ) {
+	private void writeRvi(PrintWriter writer, ArrayList<Installation> installations, ArrayList<Vessel> vessels,  HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation ) {
 		writer.println("Rvi : [");
 		writer.print("!i : ");
-		for (int j = 1; j < installations.length ; j++) {
+		for (int j = 1; j < installations.size() ; j++) {
 			writer.print(j);
-			if (! (j == (installations.length - 1))) {
+			if (! (j == (installations.size() - 1))) {
 				writer.print(", ");
 			}
 		}
 		writer.println();
-		for (int i = 0 ; i < vessels.length; i++) {
-			Vessel vessel = vessels[i];
-			for (int j = 1; j < installations.length ; j++) {//starts at 1 to exclude the depot
-				Installation installation = installations[j];
+		for (int i = 0 ; i < vessels.size(); i++) {
+			Vessel vessel = vessels.get(i);
+			for (int j = 1; j < installations.size() ; j++) {//starts at 1 to exclude the depot
+				Installation installation = installations.get(j);
 				writer.print("[");
 				List<Voyage> voyages = voyageSetByVesselAndInstallation.get(vessel).get(installation);
 				for (int k = 0; k < voyages.size(); k++) {
@@ -153,7 +129,7 @@ public class IO {
 					}
 				}
 				writer.print("]");
-				if (j != installations.length - 1) {
+				if (j != installations.size() - 1) {
 					 writer.print(", ");
 				}
 			}
@@ -162,7 +138,7 @@ public class IO {
 		writer.println("] \n");
 	}
 	
-	private void writeRvl(PrintWriter writer, Vessel[] vessels,  HashMap<Vessel, HashMap<Integer, List<Voyage>>> voyageSetByVesselAndDuration) {
+	private void writeRvl(PrintWriter writer, ArrayList<Vessel> vessels,  HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration) {
 		writer.println("Rvl : [");
 		writer.print("!l : ");
 		List<Integer> durations = new ArrayList<Integer>();
@@ -181,8 +157,8 @@ public class IO {
 			}
 		}
 		writer.println();
-		for (int i = 0 ; i < vessels.length; i++) {
-			Vessel vessel = vessels[i];
+		for (int i = 0 ; i < vessels.size(); i++) {
+			Vessel vessel = vessels.get(i);
 			for (int j = 0; j < durations.size(); j++) {
 				Integer duration = durations.get(j);
 				writer.print("[");
@@ -238,7 +214,7 @@ public class IO {
 		writer.println();
 	}
 	
-	private void writeParameters(PrintWriter writer, ArrayList<Voyage> voyageSet, Installation[] installations, Vessel[] vessels) {
+	private void writeParameters(PrintWriter writer, ArrayList<Voyage> voyageSet, ArrayList<Installation> installations, ArrayList<Vessel> vessels) {
 		writer.println("! Parameters");
 		writer.print("VoyageCost: [");
 		for (int i = 0; i < voyageSet.size(); i ++){
@@ -257,25 +233,25 @@ public class IO {
 		}
 		writer.println("]");
 		writer.print("TimeCharterCost: [");
-		for (int i = 0; i < vessels.length; i++) {
-			writer.print(vessels[i].getTimeCharterCost());
-			if (i != vessels.length - 1) {
+		for (int i = 0; i < vessels.size(); i++) {
+			writer.print(vessels.get(i).getTimeCharterCost());
+			if (i != vessels.size() - 1) {
 				writer.print(", ");
 			}
 		}
 		writer.println("]");
 		writer.print("RequiredVisits: [");
-		for (int i = 1; i < installations.length; i++) { //Starts at 1 to exclude the depots
-			writer.print(installations[i].getFrequency());
-			if (i != (installations.length - 1)) {
+		for (int i = 1; i < installations.size(); i++) { //Starts at 1 to exclude the depots
+			writer.print(installations.get(i).getFrequency());
+			if (i != (installations.size() - 1)) {
 				writer.print(", ");
 			}
 		}
 		writer.println("]");
 		writer.print("NumberOfDaysAvailable: [");
-		for (int i = 0; i < vessels.length; i++) {
-			writer.print(vessels[i].getNumberOfDaysAvailable());
-			if (i != (vessels.length-1)) {
+		for (int i = 0; i < vessels.size(); i++) {
+			writer.print(vessels.get(i).getNumberOfDaysAvailable());
+			if (i != (vessels.size()-1)) {
 				writer.print(", ");
 			}
 		}
@@ -290,10 +266,29 @@ public class IO {
 		writer.println("]");
 	}
 	
+	public ArrayList<Installation> getInstallations() {
+		getInstallationsData();
+		ArrayList<Installation> installations = new ArrayList<Installation>();
+		for (int i=0;i<installationsData.length;i++) {
+			String[] data = installationsData[i];
+			String name = data[0];
+			double openingHour = Double.parseDouble(data[1]);
+			double closingHour = Double.parseDouble(data[2]);
+			double demand = Integer.parseInt(data[3]) * loadFactor;//adjust the demand with the load factor
+			int frequency = Integer.parseInt(data[4]);
+			double serviceTime = Double.parseDouble(data[5]);
+			Installation tempInstallation = new Installation(name, openingHour, closingHour, demand, frequency, serviceTime, i);
+			installations.add(tempInstallation);
+			if (openingHour != 0 || closingHour != 24) {//added for the printing of the solution 
+				numberOfTimeWindows ++;
+			}
+		}
+		return installations;
+	}
 	
-	public Vessel[] getVessels() {
+	public ArrayList<Vessel> getVessels() {
 		getVesselsData();
-		Vessel[] vessels = new Vessel[vesselsData.length];
+		ArrayList<Vessel> vessels = new ArrayList<Vessel>();
 		for (int i=0;i<vesselsData.length;i++) {
 			String[] data = vesselsData[i];
 			String name = data[0];
@@ -305,7 +300,8 @@ public class IO {
 			double fuelConsumptionInstallation = Double.parseDouble(data[6]);
 			int timeCharterCost= Integer.parseInt(data[7]);
 			int numberOfDaysAvailable = Integer.parseInt(data[8]);
-			vessels[i] = new Vessel(name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation, timeCharterCost, numberOfDaysAvailable);
+			Vessel tempVessel = new Vessel(name, capacity, speed, unitFuelCost, fuelConsumptionSailing, fuelConsumptionDepot, fuelConsumptionInstallation, timeCharterCost, numberOfDaysAvailable);
+			vessels.add(tempVessel);
 		}
 		return vessels;
 	}

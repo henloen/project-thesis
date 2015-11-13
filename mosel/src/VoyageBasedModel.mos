@@ -4,9 +4,12 @@ uses  "mmxprs", "mmsystem"; ! Use Xpress-Optimizer
 parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
-	 ProblemInstance = '3-0';
+	 ProblemInstance = '2015-11-08 3-0';
 	 DataFile = DataFilePath + ProblemInstance + '.txt';
 end-parameters
+
+setparam('xprs_verbose',true);
+setparam('xprs_miplog',1);
 
 declarations
 	! Sizes/bounds of sets
