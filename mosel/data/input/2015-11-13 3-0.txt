@@ -1,5 +1,5 @@
 !Summary:
-!Execution time: 0,33 seconds
+!Execution time: 0,35 seconds
 !Total # voyages: 30 (6 unique)
 !Number of installations (excluding depot): 3
 !Number of time windows: 0
@@ -11,10 +11,10 @@
 !Max. duration: 80
 
 !Name: FarStar	 # voyages: 6
-!Name: HavilaForesight	 # voyages: 6
+!Name: FarSymphony	 # voyages: 6
 !Name: FarSearcher	 # voyages: 6
 !Name: FarSeeker	 # voyages: 6
-!Name: FarSymphony	 # voyages: 6
+!Name: HavilaForesight	 # voyages: 6
 !------------------------------------------------------------------------------------------------------------------------
 nV : 5
 nR : 6
@@ -34,20 +34,20 @@ Rv : [
 
 Rvi : [
 !i : 1, 2, 3
-[1, 2, 4, 6], [2, 5, 6], [3, 4, 5, 6]!Vessel: FarSeeker
-[1, 2, 4, 6], [2, 5, 6], [3, 4, 5, 6]!Vessel: FarSearcher
-[1, 2, 4, 6], [2, 5, 6], [3, 4, 5, 6]!Vessel: FarSymphony
-[1, 2, 4, 6], [2, 5, 6], [3, 4, 5, 6]!Vessel: HavilaForesight
-[1, 2, 4, 6], [2, 5, 6], [3, 4, 5, 6]!Vessel: FarStar
+[1, 3, 4, 6], [3, 5, 6], [2, 4, 5, 6]!Vessel: FarSeeker
+[1, 3, 4, 6], [3, 5, 6], [2, 4, 5, 6]!Vessel: FarSearcher
+[1, 3, 4, 6], [3, 5, 6], [2, 4, 5, 6]!Vessel: FarSymphony
+[1, 3, 4, 6], [3, 5, 6], [2, 4, 5, 6]!Vessel: HavilaForesight
+[1, 3, 4, 6], [3, 5, 6], [2, 4, 5, 6]!Vessel: FarStar
 ] 
 
 Rvl : [
-!l : 2
-[1, 2, 3, 4, 5, 6]!Vessel: FarSeeker
-[1, 2, 3, 4, 5, 6]!Vessel: FarSearcher
-[1, 2, 3, 4, 5, 6]!Vessel: FarSymphony
-[1, 2, 3, 4, 5, 6]!Vessel: HavilaForesight
-[1, 2, 3, 4, 5, 6]!Vessel: FarStar
+!l : 2, 3
+[1, 2, 3, 4, 5, 6], []!Vessel: FarSeeker
+[1, 2, 3, 4, 5, 6], []!Vessel: FarSearcher
+[1, 2, 3, 4, 5, 6], []!Vessel: FarSymphony
+[1, 2, 3, 4, 5, 6], []!Vessel: HavilaForesight
+[1, 2, 3, 4, 5, 6], []!Vessel: FarStar
 ] 
 
 minF : 5
@@ -58,7 +58,7 @@ Nf : [
 ]
 
 ! Parameters
-VoyageCost: [37970, 44429, 39085, 45544, 43120, 49580]
+VoyageCost: [37970, 39085, 44429, 45544, 43120, 49580]
 VoyageDuration: [2, 2, 2, 2, 2, 2]
 TimeCharterCost: [120000, 125000, 130000, 110000, 104000]
 RequiredVisits: [6, 5, 5]
