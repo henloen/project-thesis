@@ -1,15 +1,17 @@
-!Problem instance: 10-0
-!Solved on: 2015-11-13 16.29
-!CPU time: 1.8s
-!Optimality gap: 13.1345 %
+!Problem instance: 10-3-43
+!Total visits: 43
+!Solved on: 2015-11-15 13.45
+!CPU time: 
+!Optimality gap: 12.19%
 
-!------------------------------------------------------------
+!----------------------------------------------------------------------------
 !Objective value: 1.02845e+006
 !Charter cost:	 375000
 !Sailing cost:	 653448
 !Number of vessels used:	3
 !Number of voyages sailed: 7
-!------------------------------------------------------------
+
+!----------------------------------------------------------------------------
 !Vessels used: 
 
 !Vessel 1: 1. Cost: 120000
@@ -18,18 +20,18 @@
 !Vessel 4: 0. Cost: 110000
 !Vessel 5: 0. Cost: 104000
 
-!------------------------------------------------------------
+!----------------------------------------------------------------------------
 !Voyages used: 
 
-!Vessel 1, Voyage 798, Mon. Cost: 115024. Duration: 3
-!Vessel 1, Voyage 798, Thu. Cost: 115024. Duration: 3
-!Vessel 2, Voyage 717, Tue. Cost: 107147. Duration: 3
-!Vessel 2, Voyage 717, Sat. Cost: 107147. Duration: 3
-!Vessel 3, Voyage 204, Fri. Cost: 46720. Duration: 2
-!Vessel 3, Voyage 470, Wed. Cost: 65335. Duration: 2
-!Vessel 3, Voyage 514, Sun. Cost: 97051. Duration: 3
+!Vessel 1, Voyage 813, Mon. Cost: 115024. Duration: 3
+!Vessel 1, Voyage 813, Thu. Cost: 115024. Duration: 3
+!Vessel 2, Voyage 770, Tue. Cost: 107147. Duration: 3
+!Vessel 2, Voyage 770, Sat. Cost: 107147. Duration: 3
+!Vessel 3, Voyage 51, Fri. Cost: 46720. Duration: 2
+!Vessel 3, Voyage 556, Sun. Cost: 97051. Duration: 3
+!Vessel 3, Voyage 628, Wed. Cost: 65335. Duration: 2
 
-!------------------------------------------------------------
+!----------------------------------------------------------------------------
 !Departures to each installation:
 
 !			Mon	Tue	Wed	Thu	Fri	Sat	Sun	

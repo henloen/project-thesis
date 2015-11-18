@@ -1,0 +1,725 @@
+Epsilon-constraint method
+!Problem instance: 11-0-47
+!Total visits: 47
+!Solved on: 2015-11-15 19.55
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 0...
+!Change constrained to 0
+
+!----------------------------------------------------------------------------
+!Objective value: 1.15002e+006
+!Charter cost:	 459000
+!Sailing cost:	 691016
+!Number of vessels used:	4
+!Number of voyages sailed: 7
+!Change: 0
+!Sum of gammas: 0
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 1. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 858, Wed. Cost: 78569. Duration: 3
+!Vessel 1, Voyage 1134, Sun. Cost: 104929. Duration: 3
+!Vessel 2, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 2, Voyage 1507, Thu. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 5, Voyage 480, Wed. Cost: 58330. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  1	  1	  0	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  1	  0	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  0	  1	  1
+!Installation 9:	  1	  1	  1	  1	  0	  1	  1
+!Installation 10:	  0	  0	  1	  0	  0	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  0	  0	  0	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  0	  0	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  0	  0	  0
+!Installation 9:	  0	  0	  0	  0	  0	  0	  0
+!Installation 10:	  0	  0	  0	  0	  0	  0	  0
+!Installation 11:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 1...
+!Change constrained to 8
+
+!----------------------------------------------------------------------------
+!Objective value: 1.02179e+006
+!Charter cost:	 355000
+!Sailing cost:	 666778
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 8
+!Sum of gammas: 8
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 1. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 0. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 2, Voyage 60, Fri. Cost: 33692. Duration: 2
+!Vessel 2, Voyage 1044, Wed. Cost: 68668. Duration: 2
+!Vessel 2, Voyage 1423, Sun. Cost: 112503. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  0	  1	  0	  1	  1
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  0	  1	  1
+!Installation 9:	  1	  1	  1	  1	  0	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  1	  0	  0	  0	  1
+!Installation 4:	  0	  0	  0	  0	  0	  0	  -5.28466e-013
+!Installation 5:	  0	  0	  1	  1	  0	  0	  -5.28466e-013
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  0	  0	  0
+!Installation 9:	  0	  0	  0	  0	  0	  0	  0
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  0	  0	  1	  1	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 2...
+!Change constrained to 16
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00321e+006
+!Charter cost:	 334000
+!Sailing cost:	 669201
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 10
+!Sum of gammas: 10
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1511, Thu. Cost: 113715. Duration: 3
+!Vessel 4, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 5, Voyage 477, Fri. Cost: 55906. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1026, Wed. Cost: 65335. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  1	  1	  1	  1	  0	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  1	  1	  0	  0
+!Installation 3:	  0	  0	  0	  0	  0	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  1	  0	  1
+!Installation 9:	  0	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 3...
+!Change constrained to 24
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00321e+006
+!Charter cost:	 334000
+!Sailing cost:	 669201
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 10
+!Sum of gammas: 10
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1511, Thu. Cost: 113715. Duration: 3
+!Vessel 4, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 5, Voyage 477, Fri. Cost: 55906. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1026, Wed. Cost: 65335. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  1	  1	  1	  1	  0	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  1	  1	  0	  0
+!Installation 3:	  0	  0	  0	  0	  0	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  1	  0	  1
+!Installation 9:	  0	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 4...
+!Change constrained to 32
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00323e+006
+!Charter cost:	 334000
+!Sailing cost:	 669204
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 26
+!Sum of gammas: 26
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1402, Mon. Cost: 108662. Duration: 3
+!Vessel 1, Voyage 1435, Thu. Cost: 108965. Duration: 3
+!Vessel 4, Voyage 1260, Wed. Cost: 67662. Duration: 2
+!Vessel 4, Voyage 1352, Fri. Cost: 63481. Duration: 2
+!Vessel 4, Voyage 1511, Sun. Cost: 113715. Duration: 3
+!Vessel 5, Voyage 1030, Sat. Cost: 101996. Duration: 3
+!Vessel 5, Voyage 1413, Tue. Cost: 104723. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  0	  1	  1	  1	  0
+!Installation 3:	  1	  0	  1	  0	  1	  1	  1
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  1	  0	  0	  1	  0	  0	  0
+!Installation 7:	  0	  1	  1	  0	  1	  1	  1
+!Installation 8:	  1	  1	  1	  1	  1	  0	  1
+!Installation 9:	  1	  1	  1	  1	  0	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  0	  1	  1	  0	  1	  0	  1
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  2.44138e-013	  0	  -2.54685e-013	  0	  -1.57066e-013	  0	  -2.44471e-013
+!Installation 2:	  0	  -2.98006e-012	  1	  -3.83893e-012	  1	  0	  -7.58428e-012
+!Installation 3:	  0	  1	  -8.04468e-013	  1	  1	  -1.86184e-012	  1
+!Installation 4:	  2.44138e-013	  0	  0	  0	  -3.3138e-012	  0	  -5.30687e-012
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  1	  0	  1	  1	  0	  0	  1
+!Installation 7:	  1	  -1.03029e-013	  -4.44977e-013	  1	  1	  -5.2669e-012	  1
+!Installation 8:	  0	  0	  0	  0	  1	  1	  0
+!Installation 9:	  0	  0	  -8.04468e-013	  0	  -1.40968e-012	  0	  0
+!Installation 10:	  2.44138e-013	  -4.15495e-013	  1	  1.18929e-012	  1	  -5.5704e-012	  0
+!Installation 11:	  1	  0	  1	  1	  1	  1	  1
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 5...
+!Change constrained to 40
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00322e+006
+!Charter cost:	 334000
+!Sailing cost:	 669203
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 14
+!Sum of gammas: 14
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 861, Fri. Cost: 63214. Duration: 2
+!Vessel 1, Voyage 1204, Wed. Cost: 65602. Duration: 2
+!Vessel 1, Voyage 1435, Sun. Cost: 108965. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+!Vessel 5, Voyage 1108, Sat. Cost: 99378. Duration: 3
+!Vessel 5, Voyage 1413, Tue. Cost: 104723. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  1	  0	  1
+!Installation 2:	  1	  1	  0	  1	  1	  0	  1
+!Installation 3:	  1	  0	  1	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  0	  1	  1
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  1	  0	  0	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  1	  1	  0
+!Installation 2:	  -1.36247e-012	  0	  1	  0	  1	  1	  1
+!Installation 3:	  0	  1	  0	  -1.49392e-012	  1	  0	  -9.0411e-013
+!Installation 4:	  -3.28138e-012	  0	  0	  0	  -6.85563e-013	  -8.61755e-013	  0
+!Installation 5:	  0	  0	  1	  1	  0	  -9.00371e-013	  0
+!Installation 6:	  0	  -1.49846e-013	  0	  0	  0	  0	  0
+!Installation 7:	  -2.71272e-012	  0	  0	  -2.82041e-012	  -2.38554e-012	  -1.08757e-012	  -1.95807e-012
+!Installation 8:	  -2.71272e-012	  0	  0	  0	  0	  0	  0
+!Installation 9:	  -2.71272e-012	  1.49991e-013	  1	  0	  1	  0	  1.9581e-012
+!Installation 10:	  0	  -1.49846e-013	  0	  0	  0	  1.49846e-013	  0
+!Installation 11:	  0	  -2.1485e-012	  0	  1	  1	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 6...
+!Change constrained to 48
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00321e+006
+!Charter cost:	 334000
+!Sailing cost:	 669201
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 12
+!Sum of gammas: 12
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1511, Thu. Cost: 113715. Duration: 3
+!Vessel 4, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 5, Voyage 480, Fri. Cost: 58330. Duration: 2
+!Vessel 5, Voyage 773, Wed. Cost: 62911. Duration: 2
+!Vessel 5, Voyage 1130, Sun. Cost: 97354. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  1	  1	  0	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  0	  1	  0	  1	  1
+!Installation 8:	  1	  1	  1	  1	  0	  1	  1
+!Installation 9:	  1	  1	  1	  1	  1	  1	  0
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  -2.51354e-013	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  -1.05693e-013	  0	  1	  1	  0	  0
+!Installation 3:	  0	  0	  1	  0	  1	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  -1.05693e-013
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  1	  0	  0	  0	  1
+!Installation 8:	  0	  0	  0	  0	  0	  0	  0
+!Installation 9:	  0	  0	  0	  0	  1	  0	  1
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 7...
+!Change constrained to 56
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00321e+006
+!Charter cost:	 334000
+!Sailing cost:	 669201
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 14
+!Sum of gammas: 14
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1511, Thu. Cost: 113715. Duration: 3
+!Vessel 4, Voyage 1512, Mon. Cost: 112600. Duration: 3
+!Vessel 5, Voyage 477, Fri. Cost: 55906. Duration: 2
+!Vessel 5, Voyage 617, Sun. Cost: 97051. Duration: 3
+!Vessel 5, Voyage 1026, Wed. Cost: 65335. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  0	  1	  1	  1	  0	  1	  1
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  1	  0	  0	  1	  0	  0	  0
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  3.71925e-013	  0	  1	  1	  -2.3137e-013	  -2.31259e-013
+!Installation 3:	  1	  0	  -5.52225e-013	  4.91385e-013	  4.91329e-013	  4.71068e-013	  1
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  1	  -2.91156e-013	  1	  1	  0	  0	  1
+!Installation 6:	  0	  0	  -1.96065e-013	  0	  0	  -2.31259e-013	  0
+!Installation 7:	  0	  3.71925e-013	  0	  0	  3.72369e-013	  0	  0
+!Installation 8:	  0	  2.03615e-013	  0	  0	  1	  0	  1
+!Installation 9:	  0	  -2.50022e-013	  1	  0	  1	  -7.30527e-013	  2.03282e-013
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  3.71925e-013	  0	  0	  3.7198e-013	  0	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 8...
+!Change constrained to 64
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00322e+006
+!Charter cost:	 334000
+!Sailing cost:	 669202
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 14
+!Sum of gammas: 14
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+!Vessel 5, Voyage 393, Wed. Cost: 52271. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1260, Fri. Cost: 67662. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  0	  1	  1	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  0	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  0	  1	  1	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  1	  0	  0	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  1	  -1.89182e-013	  1	  0	  0
+!Installation 2:	  -5.34239e-013	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  1	  0	  1	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  -5.34017e-013	  0
+!Installation 7:	  -1.26121e-013	  -2.27374e-013	  1	  0	  1	  -6.61249e-013	  0
+!Installation 8:	  -9.82769e-013	  0	  0	  0	  1	  0	  1
+!Installation 9:	  -1.59694e-012	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  0	  0	  0	  0	  0
+!Installation 11:	  1.03006e-012	  0	  0	  1	  1	  -1.91069e-012	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 9...
+!Change constrained to 72
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00322e+006
+!Charter cost:	 334000
+!Sailing cost:	 669202
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 14
+!Sum of gammas: 14
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+!Vessel 5, Voyage 393, Wed. Cost: 52271. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1260, Fri. Cost: 67662. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  0	  1	  1	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  0	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  0	  1	  1	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  1	  0	  0	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  1	  -1.89182e-013	  1	  0	  0
+!Installation 2:	  -5.34239e-013	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  1	  0	  1	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  -5.34017e-013	  0
+!Installation 7:	  -1.26121e-013	  -2.27374e-013	  1	  0	  1	  -6.61249e-013	  0
+!Installation 8:	  -9.82769e-013	  0	  0	  0	  1	  0	  1
+!Installation 9:	  -1.59694e-012	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  0	  0	  0	  0	  0
+!Installation 11:	  1.03006e-012	  0	  0	  1	  1	  -1.91069e-012	  0
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!Iteration 10...
+!Change constrained to 80
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00322e+006
+!Charter cost:	 334000
+!Sailing cost:	 669202
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 14
+!Sum of gammas: 14
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+!Vessel 5, Voyage 393, Wed. Cost: 52271. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1260, Fri. Cost: 67662. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  0	  1	  1	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  0	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  0	  1	  1	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  1	  0	  0	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  1	  -1.89182e-013	  1	  0	  0
+!Installation 2:	  -5.34239e-013	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  1	  0	  1	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  1	  1	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  -5.34017e-013	  0
+!Installation 7:	  -1.26121e-013	  -2.27374e-013	  1	  0	  1	  -6.61249e-013	  0
+!Installation 8:	  -9.82769e-013	  0	  0	  0	  1	  0	  1
+!Installation 9:	  -1.59694e-012	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  0	  0	  0	  0	  0
+!Installation 11:	  1.03006e-012	  0	  0	  1	  1	  -1.91069e-012	  0
+!----------------------------------------------------------------------------
+!Pareto Front:
+0	0	1.15002e+006	
+8	8	1.02178e+006	
+16	10	1.0032e+006	
+24	10	1.0032e+006	
+32	26	1.0032e+006	
+40	14	1.0032e+006	
+48	12	1.0032e+006	
+56	14	1.0032e+006	
+64	14	1.0032e+006	
+72	14	1.0032e+006	
+80	14	1.0032e+006	
+
+Total time elapsed: 2223.24

@@ -1,15 +1,15 @@
 model VoyageBasedModel
-uses  "mmxprs", "mmsystem"; ! Use Xpress-Optimizer
+uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 
 parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
-	 InputDate = '2015-11-08 ';
-	 ProblemInstance = '6-0';
+	 InputDate = '2015-11-13 ';
+	 ProblemInstance = '10-3-43';
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
-	 OptimalityGapLimit = 0.00;
+	 OptimalityGapLimit = 0;
 	 
 	 UseEpsilonConstraintMethod = true;
 	 nIterations = 10; ! Number of iterations on epsilon-constraint
@@ -32,6 +32,10 @@ declarations
 	nT: integer; ! No of days in planning period
 	minL: integer; ! Minimum voyage duration
 	maxL: integer; ! Maximum voyage duration
+	
+	OutputFile: string;
+	DateTime: datetime;
+	graph : integer
 end-declarations
 
 initializations from DataFile
@@ -59,13 +63,13 @@ declarations
 	! Sets
 	Rv: array(V) of set of integer; ! Voyages a vessel can sail
 	Rvi: array(V, N) of set of integer; ! Voyages a vessel can sail that visit installation i
-	Rvl: array(V, N) of set of integer; ! Voyages a vessel can sail that has duration l
+	Rvl: array(V, L) of set of integer; ! Voyages a vessel can sail that has duration l
 	Nf: array(F) of set of integer; ! Sets of installations requiring f visits
 	
 	! Parameters
 	TimeCharterCost: array(V) of real; ! C^(TC)
 	VoyageCost: array(R) of real; ! C^S, includes sailing and service costs
-	VoyageDuration: array(R) of integer; ! D_v, duration of voyage
+	VoyageDuration: array(R) of integer; ! D_r, duration of voyage
 	RequiredVisits: array(N) of integer; ! S_i
 	NumberOfDaysAvailable: array(V) of integer; ! F_v, number of days vessel v may be used during the planning period
  	DepotCapacity: array(T) of integer; ! B_t, max number of vessels that can be serviced at depot each day
@@ -92,7 +96,8 @@ declarations
 	
 	! Epsilon-constraint: Used for storing output
 	! 1st row: Epsilonvalues, 2nd row: Total cost of solution, 3rd row: Change from baseline
-	ParetoFront: array(0..nIterations-1, ParetoIndex) of real;
+	ParetoFront: array(0..nIterations, ParetoIndex) of real;
+	
 end-declarations
 
 ! Parameters used for spreading departures
@@ -125,10 +130,15 @@ initializations from DataFile
  	DepotCapacity;
 end-initializations
 
+nVisitsTotal := sum(ii in N) RequiredVisits(ii);
+
 !Creating variables
 forall(vv in V) do
 	create(delta(vv));
 	delta(vv) is_binary;
+	
+	! Sets directive on variable
+	!setmipdir(delta(vv), XPRS_PR, 1);
 	
 	forall(rv in Rv(vv), tt in T) do
 		create(x(vv,rv,tt));
@@ -136,6 +146,7 @@ forall(vv in V) do
 	end-do
 	
 end-do
+
 
 ! Declaring constraints and objective function
 declarations
@@ -146,22 +157,27 @@ declarations
 	ReturnBeforeNewVoyageCon: dynamic array(V, T, L) of linctr; ! (4.5) Vessel does not begin a new voyage before it has returned from its last voyage
 	SpreadDeparturesMinCon: dynamic array(N, F, T) of linctr; ! (4.6) - Lower bound
 	SpreadDeparturesMaxCon: dynamic array(N, F, T) of linctr; ! (4.6) - Upper bound
+	
+	! Symmetry-breaking constraints
+	!SymmetryBreakingCon: dynamic array(T) of linctr; ! symmetry-breaking on the number of installations visited by voyages departing on a day
 				
 	! Epsilon-constraint
 	XToSigmaCon: array(N, T) of linctr; ! Constraint linking x-variables with sigma
 	! Constraints linking gamma and sigma
+	!(!
 	SigmaToGammaCon1: array(N, T) of linctr; 
 	SigmaToGammaCon2: array(N, T) of linctr; 
 	SigmaToGammaCon3: array(N, T) of linctr; 
 	SigmaToGammaCon4: array(N, T) of linctr; 
 	SigmaToGammaCon5: array(N, T) of linctr; 
+	!!)
+	!SigmaToGammaCon6: array(N, T) of linctr; 
+	!SigmaToGammaCon7: array(N, T) of linctr;
 	
 	Change: linctr; ! Sum of all gamma variables
 	EpsilonCon: linctr; ! Constraint that constrains change
+	
 end-declarations
-
-! (4.1)
-TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * x(vv, rr, tt);
 
 ! (4.2)
 forall(ii in N) do
@@ -187,14 +203,14 @@ end-do
 forall(ff in F, ii in Nf(ff), tt in T) do
 	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
-
-	(!
-	forall(hh in 0..hf(ff)) do
-		writeln("Day " + (tt+hh) + " becomes day " + (tt+hh)mod nT + ", " + Days((tt+hh)mod nT));
-	end-do
-	!)
 end-do
 
+(! Based on assumption that the DepotCapacity is equal for every day
+forall(tt in T | tt <> 0) do
+	SymmetryBreakingCon(tt) := sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, 6) <= sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
+end-do 
+!)
+forward procedure CreateOutputFile
 forward procedure WriteProblemInfo
 forward procedure WriteSolution
 forward procedure WriteVesselsUsed
@@ -203,31 +219,36 @@ forward procedure WriteDepartures
 forward procedure WriteBaselineSigma
 forward procedure WriteBaselineDepartures
 forward procedure WriteGamma
-	
+forward procedure WriteParetoFront
+forward procedure DrawParetoFront
+forward procedure WriteElapsedTime
 
+
+StartTime := time(SYS_NOW);
 
 if (not UseEpsilonConstraintMethod) then ! Solve problem without considering change
 	
 	writeln("Running single optimization...");
 	
+
+	! =========================================================Objective function=====================================================================
+	
+	TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) + sum(vv in V, rr in Rv(vv), tt in T) x(vv, rr, tt) * VoyageCost(rr);!  + tt*0.001 ); Uncomment to activate symmetrybreaking: Prefers voyages to start early
+
 	minimize(TotalCost);
 	
-	writeln("Model finished running");
 	
-	setparam("datetimefmt", "%.y-%0m-%0d %0H.%0M");
-	DateTime := datetime(SYS_NOW);
-	
-	OutputFile := string(DateTime) + ' ' + ProblemInstance + '.txt';
-	writeln("Writing output to " + OutputFile);
+	CreateOutputFile;
 
-	fopen('..\data\output\' + OutputFile, F_OUTPUT + F_APPEND);	
+	fopen(OutputFile, F_OUTPUT);	
 		WriteProblemInfo;
 		WriteSolution;
 		WriteVesselsUsed;
 		WriteVoyagesUsed;
 		WriteDepartures;
 		WriteBaselineSigma;
-
+		WriteElapsedTime;
+		
 	fclose(F_OUTPUT);
 	
 	
@@ -249,15 +270,24 @@ else
 		gamma(ii, tt) is_binary;
 		d1(ii, tt) is_binary;
 		d2(ii, tt) is_binary;
+		
+		
+		!setmipdir(gamma(ii, tt), XPRS_PR, 100);
+		!setmipdir(d1(ii, tt), XPRS_PR, 1000);
+		!setmipdir(d2(ii, tt), XPRS_PR, 1000);
 	end-do
 
 	forall(ii in N, tt in T) do
 		XToSigmaCon(ii, tt) := sigma(ii, tt) = sum(vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
+		!(!
 		SigmaToGammaCon1(ii, tt) := 0 <= gamma(ii, tt) - (sigma(ii, tt)-BaselineSigma(ii, tt));
 		SigmaToGammaCon2(ii, tt) := gamma(ii, tt) - (sigma(ii, tt)-BaselineSigma(ii, tt)) <= 2 * d2(ii, tt);
 		SigmaToGammaCon3(ii, tt) := 0 <= gamma(ii, tt) - (BaselineSigma(ii, tt) - sigma(ii, tt));
 		SigmaToGammaCon4(ii, tt) := gamma(ii, tt) - (BaselineSigma(ii, tt) - sigma(ii, tt)) <= 2 * d1(ii, tt);
 		SigmaToGammaCon5(ii, tt) := d1(ii, tt) + d2(ii, tt) = 1;
+		!!)
+		!SigmaToGammaCon6(ii, tt) := gamma(ii, tt) >= sigma(ii, tt)-BaselineSigma(ii, tt);
+		!SigmaToGammaCon7(ii, tt) := gamma(ii, tt) >= BaselineSigma(ii, tt) - sigma(ii, tt);
 	end-do
 	
 	
@@ -266,18 +296,28 @@ else
 	maxEpsilon := nT * nN;
 	EpsilonIncrement := ceil(nT * nN / nIterations);
 	
-	forall(iteration in 0..nIterations-1) do
+	! =========================================================Objective function=====================================================================
+	
+	TotalCost := sum(vv in V)TimeCharterCost(vv) * delta(vv) + sum(vv in V, rr in Rv(vv), tt in T) x(vv, rr, tt) * VoyageCost(rr) + Change; ! Add a small cost on change, in order to find the minimum change solution if there are multiple solution with equal cost
+		
+	CreateOutputFile;
+	fopen(OutputFile, F_OUTPUT + F_APPEND);	
+	writeln("Epsilon-constraint method");
+	
+	WriteProblemInfo;
+			
+	forall(iteration in 0..nIterations) do
 		Epsilon := iteration * EpsilonIncrement;
 		EpsilonCon := Change <= Epsilon;
 		writeln("\n!----------------------------------------------------------------------------");
 		writeln("!----------------------------------------------------------------------------");
-		writeln("!Running model iteration " + iteration + "...");
+		writeln("!Iteration " + iteration + "...");
 		writeln("!Change constrained to " + Epsilon);
 		
 		minimize(TotalCost);
 		
 		ParetoFront(iteration, 'Epsilon') := Epsilon;
-		ParetoFront(iteration, 'TotalCost') := getobjval;
+		ParetoFront(iteration, 'TotalCost') := getobjval-getsol(Change);
 		ParetoFront(iteration, 'TotalChange') := getsol(Change);
 		
 		WriteSolution;
@@ -286,24 +326,40 @@ else
 		writeln("!Sum of gammas: " + string(RealChange));
 		WriteVesselsUsed;
 		WriteVoyagesUsed;
-		WriteBaselineDepartures;
+		!WriteBaselineDepartures;
 		WriteDepartures;
 		WriteGamma;
 		
 	end-do
 	
+	WriteParetoFront;
+	!DrawParetoFront;	
+	WriteElapsedTime;
 	
+	fclose(F_OUTPUT);
+	writeln("Model finished running");
 end-if
 	
 
 
+! Only procedures for printing output below	
+procedure CreateOutputFile
+	setparam("datetimefmt", "%.y-%0m-%0d %0H.%0M");
+	DateTime := datetime(SYS_NOW);
+	if (not UseEpsilonConstraintMethod) then	
+		OutputFile := '..\data\output\' + string(DateTime) + ' ' + ProblemInstance + '.txt';
+	else 
+		OutputFile := '..\data\output\epsilon\' + string(DateTime) + ' ' + ProblemInstance + '.txt';	
+	end-if
+	writeln("Writing output to " + OutputFile);
+end-procedure
 
-! Only procedures for printing output below		
+	
 procedure WriteProblemInfo
 	writeln("!Problem instance: " + ProblemInstance);
+	writeln("!Total visits: " + nVisitsTotal);
 	writeln("!Solved on: " + DateTime);
-	writeln("!CPU time: ");
-	writeln("!Optimality gap:");
+	writeln("!Optimality gap: ");
 end-procedure
 
 procedure WriteSolution
@@ -419,6 +475,73 @@ procedure WriteGamma
 			write("\t  " + getsol(gamma(ii, tt)));		
 		end-do
 	end-do
+end-procedure
+
+procedure WriteParetoFront
+	writeln("\n!----------------------------------------------------------------------------");
+	writeln("!Pareto Front:");
+	
+	forall(iteration in 0..nIterations) do
+		forall(index in ParetoIndex)do
+			write(string(ParetoFront(iteration, index)) + "\t");
+		end-do
+		writeln("");
+	end-do
+end-procedure
+
+procedure DrawParetoFront
+
+	graph:=IVEaddplot("TotalCost(Change)",IVE_BLUE)		!Create a graph
+	
+	CheapestCost := ParetoFront(0, 'TotalCost'); ! Cost of cheapest solution found so far
+	CheapestChange := ParetoFront(0, 'TotalChange'); ! Change in cheapest solution found so far
+	
+	IVEdrawpoint(graph, CheapestChange, CheapestCost) ! Add a point to the ParetoFront
+	IVEdrawlabel(graph, CheapestChange, CheapestCost, string(CheapestChange) + ', ' + string(CheapestCost)); ! Label on solution
+	IVEdrawpoint(graph, CheapestChange, CheapestCost*1.05) ! For scale
+	EpsilonGraph := IVEaddplot("Epsilons", IVE_WHITE);
+	
+	MaxCost := CheapestCost; ! Save for drawing purposes
+	
+	writeln("\n!Output for drawing flat regions of Pareto-front in Excel:");
+
+	
+	forall(iteration in 1..nIterations) do
+		SolutionCost := ParetoFront(iteration, 'TotalCost');
+		SolutionChange := ParetoFront(iteration, 'TotalChange');
+		EpsilonVal := ParetoFront(iteration, 'Epsilon');
+		IVEdrawline(EpsilonGraph, EpsilonVal, MaxCost, EpsilonVal, 0);
+		
+		if (SolutionCost < CheapestCost) then
+			LastEpsilon := ParetoFront(iteration-1, 'Epsilon');
+			IVEdrawline(graph, CheapestChange, CheapestCost, LastEpsilon, CheapestCost); ! Draw flat region
+			
+			! Output for drawing flat regions of Pareto-front in Excel
+			write("\n\n" + CheapestChange);
+			writeln("\t" + CheapestCost);
+			write(LastEpsilon);
+			write("\t" + CheapestCost);
+		
+			IVEdrawpoint(graph, SolutionChange, SolutionCost); ! Add a point to the ParetoFront
+			IVEdrawlabel(graph, SolutionChange, SolutionCost, string(SolutionChange) + ', ' + string(SolutionCost));
+			CheapestCost := SolutionCost;
+			CheapestChange := SolutionChange;
+		end-if	
+	end-do
+	LastEpsilon := ParetoFront(nIterations, 'Epsilon');
+	IVEdrawline(graph, CheapestChange, CheapestCost, LastEpsilon, CheapestCost); ! Draw flat region
+	! Output for drawing flat regions of Pareto-front in Excel
+	write("\n\n" + CheapestChange);
+	writeln("\t" + CheapestCost);
+	write(LastEpsilon);
+	write("\t" + CheapestCost);
+	IVEdrawpoint(graph, LastEpsilon, CheapestCost*9/10); ! For scale
+	
+end-procedure
+	
+procedure WriteElapsedTime
+	EndTime := time(SYS_NOW);
+	writeln("\nTotal time elapsed: " + ((EndTime-StartTime)/1000));
 end-procedure
 
 end-model

@@ -51,5 +51,5 @@ Installation 6:	  1	  0	  0	  0	  1	  0	  0
 Installation 7:	  0	  1	  1	  1	  1	  0	  1
 Installation 8:	  1	  1	  1	  1	  0	  1	  1
 Installation 9:	  1	  1	  1	  1	  1	  0	  1
-Installation 10:	  0	  0	  0	  0	  1	  0	  0
-Installation 11:	  0	  1	  0	  1	  0	  1	  1
+Installation 10:  0	  0	  0	  0	  1	  0	  0
+Installation 11:  0	  1	  0	  1	  0	  1	  1
