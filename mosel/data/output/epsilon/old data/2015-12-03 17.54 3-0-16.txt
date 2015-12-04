@@ -1,0 +1,53 @@
+Epsilon-constraint method
+!Problem instance: 3-0-16
+!Total visits: 16
+!Solved on: 2015-12-03 17.54
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+!Objective value: 499870
+!Charter cost:	 214000
+!Sailing cost:	 285870
+!Number of vessels used:	2
+!Number of voyages sailed: 6
+!Change: 0
+!Sum of gammas: 0
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 0. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 4, Voyage 1, Thu. Cost: 37970. Duration: 2
+!Vessel 4, Voyage 6, Tue. Cost: 49580. Duration: 2
+!Vessel 4, Voyage 6, Sat. Cost: 49580. Duration: 2
+!Vessel 5, Voyage 6, Mon. Cost: 49580. Duration: 2
+!Vessel 5, Voyage 6, Wed. Cost: 49580. Duration: 2
+!Vessel 5, Voyage 6, Fri. Cost: 49580. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  1	  1	  0
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  1	  1	  1	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!Pareto Front:
+21	0	499870	
+
+Total time elapsed: 0.05

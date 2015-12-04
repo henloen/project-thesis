@@ -1,0 +1,136 @@
+Epsilon-constraint method
+!Problem instance: 11-0-47
+!Total visits: 47
+!Solved on: 2015-12-03 18.45
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+Iteration 1: 
+Epsilon: 77
+Change: 9
+Total cost: 1.00321e+006
+
+!----------------------------------------------------------------------------
+!Objective value: 1.00321e+006
+!Charter cost:	 334000
+!Sailing cost:	 669201
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 10
+!Sum of gammas: 10
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1511, Thu. Cost: 113715. Duration: 3
+!Vessel 5, Voyage 477, Fri. Cost: 55906. Duration: 2
+!Vessel 5, Voyage 677, Sun. Cost: 97354. Duration: 3
+!Vessel 5, Voyage 1026, Wed. Cost: 65335. Duration: 2
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  0	  1	  1	  0
+!Installation 3:	  1	  1	  1	  1	  0	  1	  0
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  0	  1	  1	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  1	  0	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  -3.70148e-013	  -9.53682e-013	  1	  1	  0	  0
+!Installation 3:	  0	  0	  0	  0	  -1.28453e-013	  -1.28342e-013	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  -2.53966e-013	  1	  1	  0	  -1.88516e-013	  -2.54019e-013
+!Installation 6:	  0	  0	  0	  0	  0	  0	  -2.12941e-013
+!Installation 7:	  0	  0	  -2.5735e-013	  0	  0	  0	  0
+!Installation 8:	  0	  0	  -2.5735e-013	  0	  1	  0	  1
+!Installation 9:	  0	  0	  1	  0	  1	  0	  0
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  -1.19904e-013	  -1.28342e-013	  0	  -1.28453e-013	  0	  0
+!----------------------------------------------------------------------------
+Iteration 2: 
+Epsilon: 8
+Change: 7
+Total cost: 1.02179e+006
+
+!----------------------------------------------------------------------------
+!Objective value: 1.02179e+006
+!Charter cost:	 355000
+!Sailing cost:	 666778
+!Number of vessels used:	3
+!Number of voyages sailed: 7
+!Change: 8
+!Sum of gammas: 8
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 1. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 0. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 1507, Tue. Cost: 112297. Duration: 3
+!Vessel 1, Voyage 1507, Sat. Cost: 112297. Duration: 3
+!Vessel 2, Voyage 60, Fri. Cost: 33692. Duration: 2
+!Vessel 2, Voyage 1044, Wed. Cost: 68668. Duration: 2
+!Vessel 2, Voyage 1423, Sun. Cost: 112503. Duration: 3
+!Vessel 4, Voyage 1507, Mon. Cost: 112297. Duration: 3
+!Vessel 4, Voyage 1508, Thu. Cost: 115024. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  0	  1	  1
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  1	  0	  1	  0	  1	  1
+!Installation 4:	  1	  1	  0	  1	  0	  1	  1
+!Installation 5:	  0	  0	  0	  1	  0	  0	  1
+!Installation 6:	  0	  0	  1	  0	  0	  0	  1
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  0	  1	  1
+!Installation 9:	  1	  1	  1	  1	  0	  1	  1
+!Installation 10:	  0	  0	  0	  0	  1	  0	  0
+!Installation 11:	  1	  1	  0	  0	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  1	  0	  0	  0	  1
+!Installation 4:	  0	  0	  0	  0	  0	  0	  -5.28466e-013
+!Installation 5:	  0	  0	  1	  1	  0	  0	  -5.28466e-013
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  0	  0	  0
+!Installation 9:	  0	  0	  0	  0	  0	  0	  0
+!Installation 10:	  0	  0	  1	  0	  1	  0	  0
+!Installation 11:	  0	  0	  0	  1	  1	  0	  0

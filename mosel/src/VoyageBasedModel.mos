@@ -4,18 +4,22 @@ uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 parameters
 	 ! Input file is specified here
 	 DataFilePath = '..\data\input\';
-	 InputDate = '2015-11-13 ';
-	 ProblemInstance = '10-3-43';
+	 InputDate = '2015-11-13 ';	
+	 ProblemInstance = '10-0-43';
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
 	 OptimalityGapLimit = 0;
 	 
-	 UseEpsilonConstraintMethod = true;
-	 nIterations = 10; ! Number of iterations on epsilon-constraint
+	 UseEpsilonConstraintMethod = false;
+	 ! nIterations = 10; ! Number of iterations on epsilon-constraint DEPRECATED WITH ADAPTED METHOD
 	 ! Input file containing baseline solution to compare new solution with
 	 BaselineFilePath = '..\data\input\baseline\';
 	 BaselineFile = BaselineFilePath + ProblemInstance + '_baseline.txt';
+	 
+	 ValidInequalities = false;
+	 SymmetryBreaking = false;
+	 VesselDom = true;
 
 end-parameters
 
@@ -91,12 +95,10 @@ declarations
 	! Epsilon-constraint: Variables
 	sigma: array(N, T) of mpvar; ! 1 if there is a departure to installation i on day t, 0 otherwise				
 	gamma: array(N, T) of mpvar; ! 1 if there is a change in the departures to installation i on day t, 0 otherwise
-	d1: array(N, T) of mpvar; ! 1 if sigma > BaselineSigma
-	d2: array(N, T) of mpvar; ! 1 if sigma < BaselineSigma
 	
 	! Epsilon-constraint: Used for storing output
 	! 1st row: Epsilonvalues, 2nd row: Total cost of solution, 3rd row: Change from baseline
-	ParetoFront: array(0..nIterations, ParetoIndex) of real;
+	ParetoFront: array(1..nT*nN+1, ParetoIndex) of real;
 	
 end-declarations
 
@@ -164,15 +166,8 @@ declarations
 	! Epsilon-constraint
 	XToSigmaCon: array(N, T) of linctr; ! Constraint linking x-variables with sigma
 	! Constraints linking gamma and sigma
-	!(!
 	SigmaToGammaCon1: array(N, T) of linctr; 
-	SigmaToGammaCon2: array(N, T) of linctr; 
-	SigmaToGammaCon3: array(N, T) of linctr; 
-	SigmaToGammaCon4: array(N, T) of linctr; 
-	SigmaToGammaCon5: array(N, T) of linctr; 
-	!!)
-	!SigmaToGammaCon6: array(N, T) of linctr; 
-	!SigmaToGammaCon7: array(N, T) of linctr;
+	SigmaToGammaCon2: array(N, T) of linctr;
 	
 	Change: linctr; ! Sum of all gamma variables
 	EpsilonCon: linctr; ! Constraint that constrains change
@@ -206,10 +201,73 @@ forall(ff in F, ii in Nf(ff), tt in T) do
 end-do
 
 (! Based on assumption that the DepotCapacity is equal for every day
-forall(tt in T | tt <> 0) do
+forall(tt in T | tt <> 6) do
 	SymmetryBreakingCon(tt) := sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, 6) <= sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
 end-do 
 !)
+
+! Valid inequalites
+
+declarations
+	ValidInequalityCon1: dynamic array(V) of linctr;
+	ValidInequalityCon2: dynamic array(V) of linctr;
+end-declarations
+
+if (ValidInequalities) then
+	forall(vv in V) do
+		ValidInequalityCon1(vv) := sum(tt in T, rr in Rvl(vv,3)) x(vv,rr,tt) <= 2;
+	end-do
+	
+	forall(vv in V) do
+		ValidInequalityCon2(vv) := sum(tt in T, rr in Rv(vv)) x(vv,rr,tt) <= 3;
+	end-do
+end-if
+
+
+! Symmetry-breaking constraints
+
+declarations
+	SymmetryBreakingCon: linctr;
+end-declarations
+
+if (SymmetryBreaking) then
+	minReqVis := 100;
+	minReqVisIns := 100;
+	forall(ii in N) do
+		if (RequiredVisits(ii) < minReqVis) then
+			minReqVis := RequiredVisits(ii);
+			minReqVisIns := ii;
+		end-if	
+	end-do
+	
+	SymmetryBreakingCon := sum(vv in V, rr in Rvi(vv,minReqVisIns)) x(vv,rr,6) >= 1;
+
+	(!
+	writeln("Installation with fewest required visits is: ");
+	writeln(minReqVisIns);
+	writeln("With number of visits:");
+	writeln(minReqVis);
+	!)
+end-if
+
+! Vessel domination
+
+declarations
+	VesselDomCon1: linctr;
+	VesselDomCon2: linctr;
+	VesselDomCon3: linctr;
+	VesselDomCon4: linctr;
+end-declarations
+
+if (VesselDom) then
+	VesselDomCon1 := delta(1) >= delta(2);
+	VesselDomCon2 := delta(1) >= delta(3);
+	VesselDomCon3 := delta(2) >= delta(3);
+	VesselDomCon4 := delta(4) >= delta(3);
+end-if
+	
+
+
 forward procedure CreateOutputFile
 forward procedure WriteProblemInfo
 forward procedure WriteSolution
@@ -250,7 +308,7 @@ if (not UseEpsilonConstraintMethod) then ! Solve problem without considering cha
 		WriteElapsedTime;
 		
 	fclose(F_OUTPUT);
-	
+	writeln("Model finished running");
 	
 ! Running epsilon-constraint method
 else
@@ -264,37 +322,21 @@ else
 	forall(ii in N, tt in T) do
 		create(sigma(ii, tt));
 		create(gamma(ii, tt));
-		create(d1(ii, tt));
-		create(d2(ii, tt));
 		sigma(ii, tt) is_binary;
 		gamma(ii, tt) is_binary;
-		d1(ii, tt) is_binary;
-		d2(ii, tt) is_binary;
-		
+
 		
 		!setmipdir(gamma(ii, tt), XPRS_PR, 100);
-		!setmipdir(d1(ii, tt), XPRS_PR, 1000);
-		!setmipdir(d2(ii, tt), XPRS_PR, 1000);
 	end-do
 
 	forall(ii in N, tt in T) do
 		XToSigmaCon(ii, tt) := sigma(ii, tt) = sum(vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
-		!(!
-		SigmaToGammaCon1(ii, tt) := 0 <= gamma(ii, tt) - (sigma(ii, tt)-BaselineSigma(ii, tt));
-		SigmaToGammaCon2(ii, tt) := gamma(ii, tt) - (sigma(ii, tt)-BaselineSigma(ii, tt)) <= 2 * d2(ii, tt);
-		SigmaToGammaCon3(ii, tt) := 0 <= gamma(ii, tt) - (BaselineSigma(ii, tt) - sigma(ii, tt));
-		SigmaToGammaCon4(ii, tt) := gamma(ii, tt) - (BaselineSigma(ii, tt) - sigma(ii, tt)) <= 2 * d1(ii, tt);
-		SigmaToGammaCon5(ii, tt) := d1(ii, tt) + d2(ii, tt) = 1;
-		!!)
-		!SigmaToGammaCon6(ii, tt) := gamma(ii, tt) >= sigma(ii, tt)-BaselineSigma(ii, tt);
-		!SigmaToGammaCon7(ii, tt) := gamma(ii, tt) >= BaselineSigma(ii, tt) - sigma(ii, tt);
+		SigmaToGammaCon1(ii, tt) := gamma(ii, tt) >= sigma(ii, tt)-BaselineSigma(ii, tt);
+		SigmaToGammaCon2(ii, tt) := gamma(ii, tt) >= BaselineSigma(ii, tt) - sigma(ii, tt);
 	end-do
 	
 	
 	Change := sum(ii in N, tt in T) gamma(ii, tt);
-	
-	maxEpsilon := nT * nN;
-	EpsilonIncrement := ceil(nT * nN / nIterations);
 	
 	! =========================================================Objective function=====================================================================
 	
@@ -305,7 +347,56 @@ else
 	writeln("Epsilon-constraint method");
 	
 	WriteProblemInfo;
-			
+	
+	
+	! =========================================================================================================================	
+	! Adapted epsilon-constraint method
+	Epsilon := nT * nN;
+	iteration := 1;
+	
+	while(Epsilon >= 0) do
+		EpsilonCon := Change <= Epsilon;
+		minimize(TotalCost);
+		
+		SolutionChange := integer(getsol(Change));
+		
+		ParetoFront(iteration, 'Epsilon') := Epsilon;
+		ParetoFront(iteration, 'TotalCost') := getobjval-getsol(Change);
+		ParetoFront(iteration, 'TotalChange') := SolutionChange;
+		
+		writeln("\n!----------------------------------------------------------------------------");
+		writeln("Iteration " + iteration + ": ");
+		writeln("Epsilon: " + Epsilon);
+		writeln("Change: " + SolutionChange);
+		writeln("Total cost: " + (getobjval-getsol(Change)));
+		
+		WriteSolution;
+		writeln("!Change: " + string(getsol(Change)));
+		
+		!--------------Just for debugging------------------------------
+		!RealChange := sum(ii in N, tt in T) getsol(gamma(ii, tt));
+		!writeln("!Sum of gammas: " + string(RealChange));
+		!--------------------------------------------------------------
+		
+		WriteVesselsUsed;
+		WriteVoyagesUsed;
+		!WriteBaselineDepartures;
+		WriteDepartures;
+		WriteGamma;
+		
+		if (SolutionChange = 0) then
+			break;
+		end-if
+		
+		Epsilon := SolutionChange - 1;
+		iteration := iteration + 1;
+	end-do
+	
+	
+	! End-Adapted epsilon-constraint method
+		
+	(! =========================================================================================================================
+	
 	forall(iteration in 0..nIterations) do
 		Epsilon := iteration * EpsilonIncrement;
 		EpsilonCon := Change <= Epsilon;
@@ -331,6 +422,8 @@ else
 		WriteGamma;
 		
 	end-do
+	!)
+	! =========================================================================================================================
 	
 	WriteParetoFront;
 	!DrawParetoFront;	
@@ -347,7 +440,17 @@ procedure CreateOutputFile
 	setparam("datetimefmt", "%.y-%0m-%0d %0H.%0M");
 	DateTime := datetime(SYS_NOW);
 	if (not UseEpsilonConstraintMethod) then	
-		OutputFile := '..\data\output\' + string(DateTime) + ' ' + ProblemInstance + '.txt';
+		OutputFile := '..\data\output\' + string(DateTime) + ' ' + ProblemInstance;
+		if (ValidInequalities) then
+			OutputFile := OutputFile + ' VIE ';
+		end-if
+		if (SymmetryBreaking) then
+			OutputFile := OutputFile + ' SB ';
+		end-if
+		if (VesselDom) then
+			OutputFile := OutputFile + ' VD ';
+		end-if
+		OutputFile := OutputFile + '.txt';
 	else 
 		OutputFile := '..\data\output\epsilon\' + string(DateTime) + ' ' + ProblemInstance + '.txt';	
 	end-if
@@ -368,7 +471,13 @@ procedure WriteSolution
 	
 	
 	writeln("\n!----------------------------------------------------------------------------");
-	writeln("!Objective value: " + getobjval);
+	
+	if (not UseEpsilonConstraintMethod) then
+		writeln("!Objective value: " + getobjval);
+	else
+		writeln("!Objective value: " + (getobjval-getsol(Change)));
+	end-if
+	
 	writeln("!Charter cost:\t " + sum(vv in V) TimeCharterCost(vv)*getsol(delta(vv)));
 	writeln("!Sailing cost:\t " + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * getsol(x(vv,rr,tt))); 
 	writeln("!Number of vessels used:\t" + nVesselsUsed);
@@ -479,64 +588,15 @@ end-procedure
 
 procedure WriteParetoFront
 	writeln("\n!----------------------------------------------------------------------------");
+	writeln("!Number of Pareto-optimal solutions: " + round( getsize(ParetoFront)/3 ));
 	writeln("!Pareto Front:");
 	
-	forall(iteration in 0..nIterations) do
+	forall(sol in 1.. round( getsize(ParetoFront)/3 )) do
 		forall(index in ParetoIndex)do
-			write(string(ParetoFront(iteration, index)) + "\t");
+			write(string(ParetoFront(sol, index)) + "\t");
 		end-do
 		writeln("");
 	end-do
-end-procedure
-
-procedure DrawParetoFront
-
-	graph:=IVEaddplot("TotalCost(Change)",IVE_BLUE)		!Create a graph
-	
-	CheapestCost := ParetoFront(0, 'TotalCost'); ! Cost of cheapest solution found so far
-	CheapestChange := ParetoFront(0, 'TotalChange'); ! Change in cheapest solution found so far
-	
-	IVEdrawpoint(graph, CheapestChange, CheapestCost) ! Add a point to the ParetoFront
-	IVEdrawlabel(graph, CheapestChange, CheapestCost, string(CheapestChange) + ', ' + string(CheapestCost)); ! Label on solution
-	IVEdrawpoint(graph, CheapestChange, CheapestCost*1.05) ! For scale
-	EpsilonGraph := IVEaddplot("Epsilons", IVE_WHITE);
-	
-	MaxCost := CheapestCost; ! Save for drawing purposes
-	
-	writeln("\n!Output for drawing flat regions of Pareto-front in Excel:");
-
-	
-	forall(iteration in 1..nIterations) do
-		SolutionCost := ParetoFront(iteration, 'TotalCost');
-		SolutionChange := ParetoFront(iteration, 'TotalChange');
-		EpsilonVal := ParetoFront(iteration, 'Epsilon');
-		IVEdrawline(EpsilonGraph, EpsilonVal, MaxCost, EpsilonVal, 0);
-		
-		if (SolutionCost < CheapestCost) then
-			LastEpsilon := ParetoFront(iteration-1, 'Epsilon');
-			IVEdrawline(graph, CheapestChange, CheapestCost, LastEpsilon, CheapestCost); ! Draw flat region
-			
-			! Output for drawing flat regions of Pareto-front in Excel
-			write("\n\n" + CheapestChange);
-			writeln("\t" + CheapestCost);
-			write(LastEpsilon);
-			write("\t" + CheapestCost);
-		
-			IVEdrawpoint(graph, SolutionChange, SolutionCost); ! Add a point to the ParetoFront
-			IVEdrawlabel(graph, SolutionChange, SolutionCost, string(SolutionChange) + ', ' + string(SolutionCost));
-			CheapestCost := SolutionCost;
-			CheapestChange := SolutionChange;
-		end-if	
-	end-do
-	LastEpsilon := ParetoFront(nIterations, 'Epsilon');
-	IVEdrawline(graph, CheapestChange, CheapestCost, LastEpsilon, CheapestCost); ! Draw flat region
-	! Output for drawing flat regions of Pareto-front in Excel
-	write("\n\n" + CheapestChange);
-	writeln("\t" + CheapestCost);
-	write(LastEpsilon);
-	write("\t" + CheapestCost);
-	IVEdrawpoint(graph, LastEpsilon, CheapestCost*9/10); ! For scale
-	
 end-procedure
 	
 procedure WriteElapsedTime

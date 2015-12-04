@@ -1,0 +1,5 @@
+Epsilon-constraint method
+!Problem instance: 10-3-43
+!Total visits: 43
+!Solved on: 2015-12-03 17.38
+!Optimality gap: 
