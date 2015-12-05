@@ -1,0 +1,50 @@
+!Problem instance: 5-1-23
+!Total visits: 23
+!Solved on: 2015-12-04 22.57
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+!Objective value: 814385
+!Charter cost:	 334000
+!Sailing cost:	 480385
+!Number of vessels used:	3
+!Number of voyages sailed: 6
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 18, Tue. Cost: 81599. Duration: 3
+!Vessel 1, Voyage 30, Fri. Cost: 93210. Duration: 3
+!Vessel 4, Voyage 15, Wed. Cost: 49580. Duration: 2
+!Vessel 4, Voyage 27, Sat. Cost: 85332. Duration: 3
+!Vessel 5, Voyage 27, Mon. Cost: 85332. Duration: 3
+!Vessel 5, Voyage 27, Thu. Cost: 85332. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  1	  1	  0
+!Installation 2:	  1	  0	  1	  1	  1	  1	  0
+!Installation 3:	  1	  0	  1	  1	  1	  1	  0
+!Installation 4:	  1	  1	  0	  1	  1	  1	  0
+!Installation 5:	  0	  1	  0	  0	  1	  0	  0
+
+BaselineSigma: [
+1 1 1 1 1 1 0 
+1 0 1 1 1 1 0 
+1 0 1 1 1 1 0 
+1 1 0 1 1 1 0 
+0 1 0 0 1 0 0 
+]
+
+Total time elapsed: 0.078

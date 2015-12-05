@@ -3,29 +3,39 @@ uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 
 parameters
 	 ! Input file is specified here
-	 DataFilePath = '..\data\input\';
-	 InputDate = '2015-11-13 ';	
-	 ProblemInstance = '10-0-43';
-	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt';
+	 
+	 
+	 DataFilePath = '..\data\input\'
+	 InputDate = '2015-11-13 '
+	 ProblemInstance = '10-0-43'
+	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt'
+	 
+	 OutputFilePath = '..\data\output\'
+	 
+	 ! Input file containing baseline solution to compare new solution with
+	 BaselineFilePath = '..\data\input\baseline\'
+	 BaselineFile = BaselineFilePath + ProblemInstance + '_baseline.txt'
+	 
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
-	 OptimalityGapLimit = 0;
+	 OptimalityGapLimit = 0.01;
 	 
 	 UseEpsilonConstraintMethod = false;
-	 ! nIterations = 10; ! Number of iterations on epsilon-constraint DEPRECATED WITH ADAPTED METHOD
-	 ! Input file containing baseline solution to compare new solution with
-	 BaselineFilePath = '..\data\input\baseline\';
-	 BaselineFile = BaselineFilePath + ProblemInstance + '_baseline.txt';
 	 
 	 ValidInequalities = false;
 	 SymmetryBreaking = false;
-	 VesselDom = true;
+	 VesselDom = false;
 
 end-parameters
 
+
+writeln("DataFile = " + DataFile);
+writeln("UseEpsilon = " + UseEpsilonConstraintMethod);
+
 !Modify Optimizer control parameter MIPRELSTOP
 setparam("XPRS_MIPRELSTOP", OptimalityGapLimit);
-
+setparam("XPRS_MAXTIME", 10000);
+	
 declarations
 	! Sizes/bounds of sets
 	nV: integer; ! No of vessels
@@ -39,7 +49,6 @@ declarations
 	
 	OutputFile: string;
 	DateTime: datetime;
-	graph : integer
 end-declarations
 
 initializations from DataFile
@@ -278,7 +287,6 @@ forward procedure WriteBaselineSigma
 forward procedure WriteBaselineDepartures
 forward procedure WriteGamma
 forward procedure WriteParetoFront
-forward procedure DrawParetoFront
 forward procedure WriteElapsedTime
 
 
@@ -440,7 +448,7 @@ procedure CreateOutputFile
 	setparam("datetimefmt", "%.y-%0m-%0d %0H.%0M");
 	DateTime := datetime(SYS_NOW);
 	if (not UseEpsilonConstraintMethod) then	
-		OutputFile := '..\data\output\' + string(DateTime) + ' ' + ProblemInstance;
+		OutputFile := OutputFilePath + string(DateTime) + ' ' + ProblemInstance;
 		if (ValidInequalities) then
 			OutputFile := OutputFile + ' VIE ';
 		end-if
@@ -452,7 +460,7 @@ procedure CreateOutputFile
 		end-if
 		OutputFile := OutputFile + '.txt';
 	else 
-		OutputFile := '..\data\output\epsilon\' + string(DateTime) + ' ' + ProblemInstance + '.txt';	
+		OutputFile := OutputFilePath + 'epsilon\' + string(DateTime) + ' ' + ProblemInstance + '.txt';	
 	end-if
 	writeln("Writing output to " + OutputFile);
 end-procedure
