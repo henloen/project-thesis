@@ -1,0 +1,67 @@
+!Problem instance: 12-3-51 longestRemoved 2
+!Total visits: 51
+!Solved on: 2015-12-05 18.25
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+!Objective value: 1.09304e+006
+!Charter cost:	 339000
+!Sailing cost:	 754038
+!Number of vessels used:	3
+!Number of voyages sailed: 9
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 0. Cost: 120000
+!Vessel 2: 1. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 2, Voyage 108, Fri. Cost: 78872. Duration: 2
+!Vessel 2, Voyage 2099, Wed. Cost: 67662. Duration: 2
+!Vessel 2, Voyage 2524, Sun. Cost: 107147. Duration: 3
+!Vessel 4, Voyage 134, Wed. Cost: 79781. Duration: 2
+!Vessel 4, Voyage 1199, Mon. Cost: 63178. Duration: 2
+!Vessel 4, Voyage 2756, Fri. Cost: 113509. Duration: 3
+!Vessel 5, Voyage 2099, Sat. Cost: 67662. Duration: 2
+!Vessel 5, Voyage 2122, Thu. Cost: 67359. Duration: 2
+!Vessel 5, Voyage 2494, Mon. Cost: 108868. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  0	  1	  1	  1	  1	  1
+!Installation 2:	  1	  0	  1	  0	  2	  0	  1
+!Installation 3:	  2	  0	  1	  0	  1	  1	  0
+!Installation 4:	  1	  0	  1	  0	  2	  0	  1
+!Installation 5:	  1	  0	  0	  0	  1	  0	  0
+!Installation 6:	  0	  0	  0	  1	  0	  0	  1
+!Installation 7:	  1	  0	  1	  1	  1	  1	  0
+!Installation 8:	  1	  0	  1	  1	  1	  1	  1
+!Installation 9:	  1	  0	  1	  1	  1	  1	  1
+!Installation 10:	  1	  0	  0	  0	  0	  0	  0
+!Installation 11:	  1	  0	  1	  1	  0	  1	  0
+!Installation 12:	  1	  0	  1	  0	  1	  0	  1
+
+BaselineSigma: [
+1 0 1 1 1 1 1 
+1 0 1 0 2 0 1 
+2 0 1 0 1 1 0 
+1 0 1 0 2 0 1 
+1 0 0 0 1 0 0 
+0 0 0 1 0 0 1 
+1 0 1 1 1 1 0 
+1 0 1 1 1 1 1 
+1 0 1 1 1 1 1 
+1 0 0 0 0 0 0 
+1 0 1 1 0 1 0 
+1 0 1 0 1 0 1 
+]
+
+Total time elapsed: 120.438
