@@ -5,9 +5,9 @@ parameters
 	 ! Input file is specified here
 	 
 	 
-	 DataFilePath = '..\data\input\'
+	 DataFilePath = '..\data\input\Standard input\'
 	 InputDate = '2015-11-13 '
-	 ProblemInstance = '10-0-43'
+	 ProblemInstance = '12-3-51'
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt'
 	 
 	 OutputFilePath = '..\data\output\'
@@ -18,7 +18,7 @@ parameters
 	 
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
-	 OptimalityGapLimit = 0.01;
+	 OptimalityGapLimit = 0;
 	 
 	 UseEpsilonConstraintMethod = false;
 	 
@@ -143,6 +143,8 @@ end-initializations
 
 nVisitsTotal := sum(ii in N) RequiredVisits(ii);
 
+
+
 !Creating variables
 forall(vv in V) do
 	create(delta(vv));
@@ -168,7 +170,7 @@ declarations
 	ReturnBeforeNewVoyageCon: dynamic array(V, T, L) of linctr; ! (4.5) Vessel does not begin a new voyage before it has returned from its last voyage
 	SpreadDeparturesMinCon: dynamic array(N, F, T) of linctr; ! (4.6) - Lower bound
 	SpreadDeparturesMaxCon: dynamic array(N, F, T) of linctr; ! (4.6) - Upper bound
-	
+	OneDeparturePerDayCon: dynamic array(N, T) of linctr; ! (4.6) - Maximum one departure to an installation per day
 	! Symmetry-breaking constraints
 	!SymmetryBreakingCon: dynamic array(T) of linctr; ! symmetry-breaking on the number of installations visited by voyages departing on a day
 				
@@ -207,6 +209,10 @@ end-do
 forall(ff in F, ii in Nf(ff), tt in T) do
 	SpreadDeparturesMinCon(ii, ff, tt) := Pf_min(ff) <= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
 	SpreadDeparturesMaxCon(ii, ff, tt) := Pf_max(ff) >= sum(vv in V, rr in Rvi(vv,ii), hh in 0..hf(ff)) x(vv, rr, ((tt+hh)mod nT));
+end-do
+
+forall(ii in N, tt in T) do
+	OneDeparturePerDayCon(ii, tt) := sum(vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt) <= 1;
 end-do
 
 (! Based on assumption that the DepotCapacity is equal for every day
