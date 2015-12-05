@@ -39,10 +39,10 @@ public class IO {
 	}
 	
 
-	public void writeOutputToDataFile(ArrayList<Installation> installations, ArrayList<Vessel> vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime) {
+	public void writeOutputToDataFile(ArrayList<Installation> installations, ArrayList<Vessel> vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime, int removeLongestPairs) {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, true), "UTF-8");
+			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, getNumberOfTotalVisits(installations), removeLongestPairs), "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Something went wrong when writing to output file");
@@ -411,16 +411,26 @@ public class IO {
 		return dateFormat.format(date);
 	}
 	
-	public String generateOutputFilename(int numberOfTimeWindows, boolean dataOutput) {
-		String fileName = outputFileName + getTodaysDate() + " " + (numberOfNodes-1) + "-" + (numberOfTimeWindows);
-		if (! dataOutput) {
-			fileName += "Text";
+	public String generateOutputFilename(int numberOfTimeWindows, int totalVisits, int removeLongestPairs) {
+		String fileName = outputFileName + getTodaysDate() + " " + (numberOfNodes-1) + "-" + numberOfTimeWindows + "-" + totalVisits;
+		if (removeLongestPairs > 0) {
+			fileName += " longestRemoved " + removeLongestPairs ;
 		}
 		return fileName + ".txt";
 	}
 
 	public int getMinNumberOfInstallations() {
 		return minNumberOfInstallations;
+	}
+	
+	public int getNumberOfTotalVisits(ArrayList<Installation> installations) {
+		int totalVisits = 0;
+		for (Installation installation : installations) {
+			if (installation.getNumber() != 0) {
+				totalVisits += installation.getFrequency();
+			}
+		}
+		return totalVisits;
 	}
 
 	public int getMaxNumberOfInstallations() {

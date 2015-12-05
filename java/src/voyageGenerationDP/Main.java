@@ -20,8 +20,9 @@ public class Main {
 	private static HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration;
 	private static IO io;
 	private static long startTime, stopTime;
+	private static int removeLongestPairs = 0;
 	private static String inputFileName = "data/input/Input data.xls",
-			outputFileName = "data/output/"; //sets the folder see the constructor of IO for the filename format
+			outputFileName = "data/output/"; //sets the folder, see the constructor of IO for the filename format
 	
 	public static void main(String[] args) {
 		startTime = System.nanoTime();
@@ -37,12 +38,13 @@ public class Main {
 			generateVoyageSetsByVessel(vesselSet);
 		}
 		generateVoyageSet();
+		filterByHeuristics(); //filters voyageSetByVessel by reducing the number of voyages
 		generateVoyageSetsByVesselAndInstallation();
 		generateVoyageSetsByVesselAndDuration();
 		generateInstallationSetsByFrequency();
 		
 		stopTime = System.nanoTime();
-		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, installationSetsByFrequency, stopTime - startTime); //stopTime-startTime equals the execution time of the program
+		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, installationSetsByFrequency, stopTime - startTime, removeLongestPairs); //stopTime-startTime equals the execution time of the program
 	}	
 	
 	//get data from input file
@@ -164,6 +166,13 @@ public class Main {
 				}
 			}
 			installationSetsByFrequency.put(f, installationList);
+		}
+	}
+	
+	private static void filterByHeuristics() {
+		Heuristics heuristics = new Heuristics(distances);
+		if (removeLongestPairs > 0) {
+			heuristics.removeLongestDistancePairs(removeLongestPairs, voyageSetByVessel);
 		}
 	}
 	
