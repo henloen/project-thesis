@@ -63,4 +63,4 @@ VoyageDuration: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 
 TimeCharterCost: [120000, 125000, 130000, 110000, 104000]
 RequiredVisits: [6, 5, 5, 5, 2, 2]
 NumberOfDaysAvailable: [7, 7, 7, 7, 7]
-DepotCapacity: [3, 3, 3, 3, 3, 3, 3]
+DepotCapacity: [3, 3, 3, 3, 3, 3, 0]

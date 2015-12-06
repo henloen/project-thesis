@@ -68,7 +68,7 @@ public class VBMRunner
   constantParameters += "OutputFilePath = '" + outputFilePath + "', ";
   constantParameters += "BaselineFilePath = '" + baselineFilePath + "', ";
   
-  for (int i = 0; i < numberOfProblems-1; i++){
+  for (int i = 0; i < numberOfProblems; i++){
 	String parameters = constantParameters;
 	
 	parameters += "InputDate = '" + inputDate[i] + "', ";
@@ -124,7 +124,7 @@ public class VBMRunner
 	symmetryBreaking = new boolean[numberOfProblems];
 	vesselDom = new boolean[numberOfProblems];
 	
-	for (int i = 0; i < numberOfProblems-1; i++){
+	for (int i = 0; i < numberOfProblems; i++){
 		inputDate[i] = sheet.getCell(1, 7+i).getContents();
 		problemInstance[i] = sheet.getCell(2, 7+i).getContents();
 		optimalityGapLimit[i] = Double.parseDouble(sheet.getCell(3, 7+i).getContents());

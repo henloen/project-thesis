@@ -7,7 +7,7 @@ parameters
 	 
 	 DataFilePath = '..\data\input\Standard input\'
 	 InputDate = '2015-11-13 '
-	 ProblemInstance = '12-3-51'
+	 ProblemInstance = '11-3-47'
 	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt'
 	 
 	 OutputFilePath = '..\data\output\'
@@ -22,9 +22,12 @@ parameters
 	 
 	 UseEpsilonConstraintMethod = false;
 	 
-	 ValidInequalities = false;
+	 ! NB! Not valid to use symmetrybreaking when depot capacity varies from day to day
 	 SymmetryBreaking = false;
-	 VesselDom = false;
+	 
+	 
+	 ValidInequalities = true;
+	 VesselDom = true;
 
 end-parameters
 
@@ -255,7 +258,7 @@ if (SymmetryBreaking) then
 		end-if	
 	end-do
 	
-	SymmetryBreakingCon := sum(vv in V, rr in Rvi(vv,minReqVisIns)) x(vv,rr,6) >= 1;
+	SymmetryBreakingCon := sum(vv in V, rr in Rvi(vv,minReqVisIns)) x(vv,rr,0) >= 1;
 
 	(!
 	writeln("Installation with fewest required visits is: ");
