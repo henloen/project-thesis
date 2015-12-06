@@ -1,5 +1,5 @@
 !Summary:
-!Execution time: 1,32 seconds
+!Execution time: 1,06 seconds
 !Total # voyages: 1244 (1496 unique)
 !Number of installations (excluding depot): 11
 !Number of time windows: 3
