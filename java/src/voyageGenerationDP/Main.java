@@ -20,9 +20,11 @@ public class Main {
 	private static HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration;
 	private static IO io;
 	private static long startTime, stopTime;
-	private static int removeLongestPairs = 0;
 	private static String inputFileName = "data/input/Input data.xls",
 			outputFileName = "data/output/"; //sets the folder, see the constructor of IO for the filename format
+	//heuristic parameteres
+	private static int removeLongestPairs = 0, minInstallationsHeur = 0;
+	private static double capacityFraction = 0.9;
 	
 	public static void main(String[] args) {
 		startTime = System.nanoTime();
@@ -43,8 +45,11 @@ public class Main {
 		generateVoyageSetsByVesselAndDuration();
 		generateInstallationSetsByFrequency();
 		
+		
+		//printVoyages(); //helper function to see voyages
+		
 		stopTime = System.nanoTime();
-		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, installationSetsByFrequency, stopTime - startTime, removeLongestPairs); //stopTime-startTime equals the execution time of the program
+		io.writeOutputToDataFile(installations, vessels, voyageSet, voyageSetByVessel, voyageSetByVesselAndInstallation, voyageSetByVesselAndDuration, installationSetsByFrequency, stopTime - startTime, removeLongestPairs, minInstallationsHeur, capacityFraction); //stopTime-startTime equals the execution time of the program
 	}	
 	
 	//get data from input file
@@ -170,10 +175,54 @@ public class Main {
 	}
 	
 	private static void filterByHeuristics() {
-		Heuristics heuristics = new Heuristics(distances);
+		Heuristics heuristics = new Heuristics(distances, installations);
 		if (removeLongestPairs > 0) {
-			heuristics.removeLongestDistancePairs(removeLongestPairs, voyageSetByVessel);
+			heuristics.removeLongestDistancePairs(removeLongestPairs,2, voyageSetByVessel);
 		}
+		if (minInstallationsHeur > 0) {
+			heuristics.minInstallationsHeur(minInstallationsHeur, voyageSetByVessel);
+		}
+		if (capacityFraction > 0) {
+			heuristics.minCapacityUsed(capacityFraction, voyageSetByVessel);
+		}
+	}
+	
+	private static void printVoyages() {
+		ArrayList<Integer> voyageNumbers = new ArrayList<Integer>();
+		voyageNumbers.add(1407);
+		voyageNumbers.add(1507);
+		voyageNumbers.add(1508);
+		voyageNumbers.add(1508);
+		voyageNumbers.add(827);
+		voyageNumbers.add(861);
+		voyageNumbers.add(1079);
+		HashMap<Integer, Integer> installationNumbers = new HashMap<Integer, Integer>();
+		for (Voyage voyage : voyageSet) {
+			if (voyageNumbers.contains(voyage.getNumber())) {
+				Integer installationNumber = voyage.getVisited().size() - 2;
+				Integer currentValue = installationNumbers.get(installationNumber);
+				if (currentValue == null ) {
+					installationNumbers.put(installationNumber, 1);
+				}
+				else {
+					installationNumbers.put(installationNumber, currentValue + 1);
+				}
+				System.out.println(voyage.getFullText());
+			}
+		}
+		HashMap<Integer, Integer> installationNumbers2 = new HashMap<Integer, Integer>();
+		for (Voyage voyage2 : voyageSet) {
+			Integer installationNumber = voyage2.getVisited().size() - 2;
+			Integer currentValue = installationNumbers2.get(installationNumber);
+			if (currentValue == null ) {
+				installationNumbers2.put(installationNumber, 1);
+			}
+			else {
+				installationNumbers2.put(installationNumber, currentValue + 1);
+			}
+		}
+		System.out.println(installationNumbers);
+		System.out.println(installationNumbers2);
 	}
 	
 	

@@ -39,10 +39,10 @@ public class IO {
 	}
 	
 
-	public void writeOutputToDataFile(ArrayList<Installation> installations, ArrayList<Vessel> vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime, int removeLongestPairs) {
+	public void writeOutputToDataFile(ArrayList<Installation> installations, ArrayList<Vessel> vessels, ArrayList<Voyage> voyageSet, HashMap<Vessel,ArrayList<Voyage>> voyageSetByVessel, HashMap<Vessel, HashMap<Installation, ArrayList<Voyage>>> voyageSetByVesselAndInstallation, HashMap<Vessel, HashMap<Integer, ArrayList<Voyage>>> voyageSetByVesselAndDuration, HashMap<Integer, ArrayList<Installation>> installationSetsByFrequency,long executionTime, int removeLongestPairs, int minInstallationsHeur, double capacityFraction) {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, getNumberOfTotalVisits(installations), removeLongestPairs), "UTF-8");
+			writer = new PrintWriter(generateOutputFilename(numberOfTimeWindows-1, getNumberOfTotalVisits(installations), removeLongestPairs, minInstallationsHeur, capacityFraction), "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Something went wrong when writing to output file");
@@ -411,10 +411,16 @@ public class IO {
 		return dateFormat.format(date);
 	}
 	
-	public String generateOutputFilename(int numberOfTimeWindows, int totalVisits, int removeLongestPairs) {
+	public String generateOutputFilename(int numberOfTimeWindows, int totalVisits, int removeLongestPairs, int minInstallationsHeur, double capacityFraction) {
 		String fileName = outputFileName + getTodaysDate() + " " + (numberOfNodes-1) + "-" + numberOfTimeWindows + "-" + totalVisits;
 		if (removeLongestPairs > 0) {
-			fileName += " longestRemoved " + removeLongestPairs ;
+			fileName += " longestRemoved " + removeLongestPairs;
+		}
+		if (minInstallationsHeur > 0) {
+			fileName += " minInstallations " + minInstallationsHeur;
+		}
+		if (capacityFraction > 0) {
+			fileName += " minCapacityFraction " + capacityFraction;
 		}
 		return fileName + ".txt";
 	}
