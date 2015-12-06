@@ -1,0 +1,64 @@
+!Problem instance: 10-3-43 longestRemoved 10
+!Total visits: 43
+!Solved on: 2015-12-06 13.39
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+!Objective value: 1.19243e+006
+!Charter cost:	 459000
+!Sailing cost:	 733434
+!Number of vessels used:	4
+!Number of voyages sailed: 10
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 1. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 163, Mon. Cost: 50756. Duration: 2
+!Vessel 1, Voyage 794, Wed. Cost: 109268. Duration: 3
+!Vessel 2, Voyage 156, Tue. Cost: 48477. Duration: 2
+!Vessel 2, Voyage 670, Fri. Cost: 100687. Duration: 3
+!Vessel 4, Voyage 72, Tue. Cost: 80181. Duration: 2
+!Vessel 4, Voyage 89, Thu. Cost: 44029. Duration: 2
+!Vessel 4, Voyage 683, Sat. Cost: 98360. Duration: 3
+!Vessel 5, Voyage 43, Sat. Cost: 43326. Duration: 2
+!Vessel 5, Voyage 181, Thu. Cost: 61299. Duration: 2
+!Vessel 5, Voyage 745, Mon. Cost: 97051. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  1	  1	  0
+!Installation 2:	  1	  1	  1	  1	  0	  1	  0
+!Installation 3:	  1	  0	  1	  1	  1	  1	  0
+!Installation 4:	  1	  1	  1	  0	  1	  1	  0
+!Installation 5:	  0	  0	  1	  0	  0	  1	  0
+!Installation 6:	  1	  0	  0	  1	  0	  0	  0
+!Installation 7:	  1	  1	  0	  1	  1	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  1	  1	  1	  1	  0
+!Installation 10:	  1	  0	  0	  0	  0	  0	  0
+
+BaselineSigma: [
+1 1 1 1 1 1 0 
+1 1 1 1 0 1 0 
+1 0 1 1 1 1 0 
+1 1 1 0 1 1 0 
+0 0 1 0 0 1 0 
+1 0 0 1 0 0 0 
+1 1 0 1 1 1 0 
+1 1 1 1 1 1 0 
+1 1 1 1 1 1 0 
+1 0 0 0 0 0 0 
+]
+
+Total time elapsed: 13.548

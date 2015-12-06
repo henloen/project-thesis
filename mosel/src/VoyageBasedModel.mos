@@ -5,10 +5,10 @@ parameters
 	 ! Input file is specified here
 	 
 	 
-	 DataFilePath = '..\data\input\minCap\'
-	 InputDate = '2015-12-06 '
-	 ProblemInstance = '11-3-47 minCapacityFraction 0.4'
-	 DataFile = DataFilePath + InputDate +  ProblemInstance + '.txt'
+	 DataFilePath = '..\data\input\standard input\'
+	 InputDate = '2015-11-13'
+	 ProblemInstance = '13-0-55'
+	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
 	 OutputFilePath = '..\data\output\'
 	 
@@ -36,7 +36,7 @@ writeln("UseEpsilon = " + UseEpsilonConstraintMethod);
 
 !Modify Optimizer control parameter MIPRELSTOP
 setparam("XPRS_MIPRELSTOP", OptimalityGapLimit);
-setparam("XPRS_MAXTIME", 10000);
+setparam("XPRS_MAXTIME", 3600);
 setparam("XPRS_CPUTIME", 0); ! 0 - Reports actual time, 1- Reports CPU time
 	
 declarations
