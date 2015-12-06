@@ -71,7 +71,23 @@ public class Heuristics {
 				return distance;
 			}
 		}
-		return 9999999999.9;
+		return null;
+	}
+	
+	private Double getShortestDistance(Integer i, HashMap<Double, ArrayList<Integer>> arcs) {
+		ArrayList<Double> shortestList = new ArrayList<Double>();
+		for (Double distance : arcs.keySet()) {
+			if (arcs.get(distance).contains(i)) {
+				shortestList.add(distance);
+			}
+		}
+		Collections.sort(shortestList);
+		if (shortestList.size() == 0) {
+			return null;
+		}
+		else {
+			return shortestList.get(0);
+		}
 	}
 		
 	
@@ -94,12 +110,27 @@ public class Heuristics {
 				}
 				else {
 					Double shortestDist = longestDistances.get(0);
-					System.out.println(getDistance(i,j,arcs));
-					if (distance>getDistance(i,j, arcs)
-							&& ((installationCount.get(i) >= maxPerInstallation && installationCount.get(j) >= maxPerInstallation)
-									|| (installationCount.get(i) >= maxPerInstallation && installationCount.get(j) < maxPerInstallation)
-									|| (installationCount.get(i) < maxPerInstallation && installationCount.get(j) >= maxPerInstallation))) {
-						removeArc(getDistance(i,j,arcs), longestDistances, arcs, installationCount);
+					Double ijdist = getDistance(i,j, arcs);
+					Double shortestI = getShortestDistance(i, arcs);
+					Double shortestJ = getShortestDistance(j, arcs);
+					if (ijdist != null && distance>ijdist
+							&& installationCount.get(i) >= maxPerInstallation
+							&& installationCount.get(j) >= maxPerInstallation) {
+						removeArc(ijdist, longestDistances, arcs, installationCount);
+						addArc(distance, arc, longestDistances, arcs, installationCount);
+					}
+					else if (shortestI != null
+							&& distance > shortestI 
+							&& installationCount.get(i) >= maxPerInstallation 
+							&& installationCount.get(j) < maxPerInstallation) {
+						removeArc(shortestI, longestDistances, arcs, installationCount);
+						addArc(distance, arc, longestDistances, arcs, installationCount);
+					}
+					else if (shortestJ != null
+							&& distance > shortestJ
+							&& installationCount.get(i) < maxPerInstallation
+							&& installationCount.get(j) >= maxPerInstallation){
+						removeArc(shortestJ, longestDistances, arcs, installationCount);
 						addArc(distance, arc, longestDistances, arcs, installationCount);
 					}
 					else if (installationCount.get(i) >= maxPerInstallation || installationCount.get(j) >= maxPerInstallation) {
@@ -112,6 +143,7 @@ public class Heuristics {
 				}
 			}
 		}
+		System.out.println(longestDistances);
 		return new ArrayList<ArrayList<Integer>>(arcs.values());
 	}
 	

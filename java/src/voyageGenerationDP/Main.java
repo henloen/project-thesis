@@ -23,8 +23,8 @@ public class Main {
 	private static String inputFileName = "data/input/Input data.xls",
 			outputFileName = "data/output/"; //sets the folder, see the constructor of IO for the filename format
 	//heuristic parameters
-	private static int removeLongestArcs = 0, minInstallationsHeur = 0;
-	private static double capacityFraction = 0.4;
+	private static int removeLongestArcs = 10, minInstallationsHeur = 0, maxArcsRemovedInstallation = 2;
+	private static double capacityFraction = 0;
 	
 	public static void main(String[] args) {
 		startTime = System.nanoTime();
@@ -177,7 +177,7 @@ public class Main {
 	private static void filterByHeuristics() {
 		Heuristics heuristics = new Heuristics(distances, installations);
 		if (removeLongestArcs > 0) {
-			heuristics.removeLongestDistancePairs(removeLongestArcs ,2, voyageSetByVessel);
+			heuristics.removeLongestDistancePairs(removeLongestArcs, maxArcsRemovedInstallation, voyageSetByVessel);
 		}
 		if (minInstallationsHeur > 0) {
 			heuristics.minInstallationsHeur(minInstallationsHeur, voyageSetByVessel);
