@@ -15,7 +15,7 @@ public class Heuristics {
 	}
 	
 	public void removeLongestDistancePairs(int numberOfPairs, int maxPerInstallation, HashMap<Vessel, ArrayList<Voyage>> voyageSetByVessel) {
-		ArrayList<ArrayList<Integer>> pairs = longestDistancePairs(numberOfPairs, maxPerInstallation);
+		ArrayList<ArrayList<Integer>> pairs = longestArcs(numberOfPairs, maxPerInstallation);
 		System.out.println(pairs);
 		for (Vessel vessel : voyageSetByVessel.keySet()) {
 			ArrayList<Voyage> removeList = new ArrayList<Voyage>();
@@ -48,9 +48,36 @@ public class Heuristics {
 		return false;
 	}
 	
+	private void addArc(Double distance, ArrayList<Integer> arc, ArrayList<Double> longestDistances, HashMap<Double, ArrayList<Integer>> arcs, HashMap<Integer, Integer> installationCount) {
+		longestDistances.add(distance);
+		arcs.put(distance, arc);
+		for (Integer i : arc) {
+			installationCount.put(i, installationCount.get(i)+1);
+		}
+		Collections.sort(longestDistances);
+	}
 	
-	private ArrayList<ArrayList<Integer>> longestDistancePairs (int numberOfPairs, int maxPerInstallation) {
-		HashMap<Double, ArrayList<Integer>> pairs = new HashMap<Double, ArrayList<Integer>>();
+	private void removeArc(Double distance, ArrayList<Double> longestDistances, HashMap<Double, ArrayList<Integer>> arcs, HashMap<Integer, Integer> installationCount) {
+		longestDistances.remove(distance);
+		ArrayList<Integer> oldPair = arcs.remove(distance);
+		for (Integer i : oldPair) {
+			installationCount.put(i, installationCount.get(i)-1);
+		}
+	}
+	
+	private Double getDistance(Integer i, Integer j, HashMap<Double, ArrayList<Integer>> arcs) {
+		for (Double distance : arcs.keySet()) {
+			if (arcs.get(distance).contains(i) && arcs.get(distance).contains(j)) {
+				return distance;
+			}
+		}
+		return 9999999999.9;
+	}
+		
+	
+	
+	private ArrayList<ArrayList<Integer>> longestArcs (int numberOfArcs, int maxPerInstallation) {
+		HashMap<Double, ArrayList<Integer>> arcs = new HashMap<Double, ArrayList<Integer>>();
 		HashMap<Integer, Integer> installationCount = new HashMap<Integer, Integer>();
 		for (Installation installation : installations) {
 			installationCount.put(installation.getNumber(), 0);
@@ -59,92 +86,35 @@ public class Heuristics {
 		for (int i = 1; i < distances[0].length; i ++) {
 			for (int j = i+1; j < distances[i].length; j++) {
 				Double distance = distances[i][j];
-				if (longestDistances.size()<numberOfPairs) {
-					ArrayList<Integer> pair = new ArrayList<Integer>();
-					pair.add(i);
-					pair.add(j);
-					longestDistances.add(distance);
-					pairs.put(distance, pair);
-					installationCount.put(i, installationCount.get(i)+1);
-					installationCount.put(j, installationCount.get(j)+1);
-					Collections.sort(longestDistances);
-					System.out.println(longestDistances);
+				ArrayList<Integer> arc = new ArrayList<>();
+				arc.add(i);
+				arc.add(j);
+				if (longestDistances.size()<numberOfArcs) {
+					addArc(distance, arc, longestDistances, arcs, installationCount);
 				}
 				else {
 					Double shortestDist = longestDistances.get(0);
-					if (distance > shortestDist) {
-						Double shortestDistanceI = shortestDistanceInst(i, pairs);
-						Double shortestDistanceJ = shortestDistanceInst(j, pairs);
-						if (installationCount.get(i)>=(maxPerInstallation-1) && distance > shortestDistanceI) {
-							System.out.println(""+i + ": " + installationCount.get(i));
-							longestDistances.remove(shortestDistanceI);
-							ArrayList<Integer> oldPair = pairs.remove(shortestDistanceI);
-							System.out.println("oldPair: " + oldPair);
-							installationCount.put(oldPair.get(0), installationCount.get(oldPair.get(0))-1);
-							installationCount.put(oldPair.get(1), installationCount.get(oldPair.get(1))-1);
-							ArrayList<Integer> pair = new ArrayList<Integer>();
-							pair.add(i);
-							pair.add(j);
-							longestDistances.add(distance);
-							pairs.put(distance, pair);
-							Collections.sort(longestDistances);
-							installationCount.put(i, installationCount.get(i)+1);
-							installationCount.put(j, installationCount.get(j)+1);
-							System.out.println("test1");
-						}
-						else if (installationCount.get(j)>=(maxPerInstallation-1) && distance > shortestDistanceJ) {
-							System.out.println(""+i + ": " + installationCount.get(i));
-							longestDistances.remove(shortestDistanceJ);
-							ArrayList<Integer> oldPair = pairs.remove(shortestDistanceJ);
-							System.out.println("oldPair: " + oldPair);
-							installationCount.put(oldPair.get(0), installationCount.get(oldPair.get(0))-1);
-							installationCount.put(oldPair.get(1), installationCount.get(oldPair.get(1))-1);
-							ArrayList<Integer> pair = new ArrayList<Integer>();
-							pair.add(i);
-							pair.add(j);
-							longestDistances.add(distance);
-							pairs.put(distance, pair);
-							Collections.sort(longestDistances);
-							installationCount.put(i, installationCount.get(i)+1);
-							installationCount.put(j, installationCount.get(j)+1);
-							System.out.println("test2");
-						}
-						else if (installationCount.get(i)>maxPerInstallation || installationCount.get(j)>maxPerInstallation) {
-							continue;
-						}
-						else {
-							longestDistances.remove(0);
-							ArrayList<Integer> oldPair = pairs.remove(shortestDist);
-							installationCount.put(oldPair.get(0), installationCount.get(oldPair.get(0))-1);
-							installationCount.put(oldPair.get(1), installationCount.get(oldPair.get(1))-1);
-							ArrayList<Integer> pair = new ArrayList<Integer>();
-							pair.add(i);
-							pair.add(j);
-							longestDistances.add(distance);
-							pairs.put(distance, pair);
-							Collections.sort(longestDistances);
-							installationCount.put(i, installationCount.get(i)+1);
-							installationCount.put(j, installationCount.get(j)+1);
-						}
+					System.out.println(getDistance(i,j,arcs));
+					if (distance>getDistance(i,j, arcs)
+							&& ((installationCount.get(i) >= maxPerInstallation && installationCount.get(j) >= maxPerInstallation)
+									|| (installationCount.get(i) >= maxPerInstallation && installationCount.get(j) < maxPerInstallation)
+									|| (installationCount.get(i) < maxPerInstallation && installationCount.get(j) >= maxPerInstallation))) {
+						removeArc(getDistance(i,j,arcs), longestDistances, arcs, installationCount);
+						addArc(distance, arc, longestDistances, arcs, installationCount);
+					}
+					else if (installationCount.get(i) >= maxPerInstallation || installationCount.get(j) >= maxPerInstallation) {
+						continue;
+					}
+					else if (distance > shortestDist) {
+						removeArc(shortestDist, longestDistances, arcs, installationCount);
+						addArc(distance, arc, longestDistances, arcs, installationCount);	
 					}
 				}
 			}
 		}
-		System.out.println(longestDistances);
-		System.out.println(installationCount);
-		return new ArrayList<ArrayList<Integer>>(pairs.values());
+		return new ArrayList<ArrayList<Integer>>(arcs.values());
 	}
 	
-	private Double shortestDistanceInst(Integer i, HashMap<Double, ArrayList<Integer>> pairs) {
-		Double shortestDist = 999999999.9;
-		for (Double distance : pairs.keySet()) {
-			if (distance<shortestDist && pairs.get(distance).contains(i)) {
-				shortestDist = distance;
-			}
-		}
-		return shortestDist;
-	}
-
 	public void minInstallationsHeur(int minimumNumberOfInstallations, HashMap<Vessel, ArrayList<Voyage>> voyageSetByVessel) {
 		for (Vessel vessel : voyageSetByVessel.keySet()) {
 			ArrayList<Voyage> removeList = new ArrayList<Voyage>();
