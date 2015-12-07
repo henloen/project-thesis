@@ -5,9 +5,9 @@ parameters
 	 ! Input file is specified here
 	 
 	 
-	 DataFilePath = '..\data\input\standard input\'
-	 InputDate = '2015-11-13'
-	 ProblemInstance = '13-0-55'
+	 DataFilePath = '..\data\input\for report\'
+	 InputDate = '2015-12-07'
+	 ProblemInstance = '12-3-51 longestRemoved 10'
 	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
 	 OutputFilePath = '..\data\output\'
@@ -154,7 +154,9 @@ forall(vv in V) do
 	delta(vv) is_binary;
 	
 	! Sets directive on variable
-	!setmipdir(delta(vv), XPRS_PR, 1);
+	! setmipdir(delta(vv), XPRS_PR, 1);
+	! setmipdir(delta(vv), XPRS_DN);
+	! setmipdir(delta(vv), XPRS_UP);
 	
 	forall(rv in Rv(vv), tt in T) do
 		create(x(vv,rv,tt));
