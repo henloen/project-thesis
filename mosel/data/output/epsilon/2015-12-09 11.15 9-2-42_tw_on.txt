@@ -1,0 +1,73 @@
+Epsilon-constraint method
+Baseline file: \\file.stud.iot.ntnu.no\Home\thombor\Desktop\GitHub\project-thesis\mosel\data\input\baseline\9-0-42.txt
+
+!Problem instance: 9-2-42
+!Total visits: 42
+!Solved on: 2015-12-09 11.15
+!Optimality gap: 
+
+!----------------------------------------------------------------------------
+Iteration 1: 
+Epsilon: 63
+Change: 0
+Total cost: 949212
+
+!----------------------------------------------------------------------------
+!Objective value: 949212
+!Charter cost:	 334000
+!Sailing cost:	 615212
+!Number of vessels used:	3
+!Number of voyages sailed: 6
+!Change: 0
+
+!----------------------------------------------------------------------------
+!Vessels used: 
+
+!Vessel 1: 1. Cost: 120000
+!Vessel 2: 0. Cost: 125000
+!Vessel 3: 0. Cost: 130000
+!Vessel 4: 1. Cost: 110000
+!Vessel 5: 1. Cost: 104000
+
+!----------------------------------------------------------------------------
+!Voyages used: 
+
+!Vessel 1, Voyage 408, Tue. Cost: 68668. Duration: 2
+!Vessel 1, Voyage 474, Fri. Cost: 108662. Duration: 3
+!Vessel 4, Voyage 492, Mon. Cost: 115024. Duration: 3
+!Vessel 4, Voyage 492, Thu. Cost: 115024. Duration: 3
+!Vessel 5, Voyage 414, Wed. Cost: 100687. Duration: 3
+!Vessel 5, Voyage 463, Sat. Cost: 107147. Duration: 3
+
+!----------------------------------------------------------------------------
+!Departures to each installation:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  1	  1	  1	  1	  1	  1	  0
+!Installation 2:	  1	  1	  0	  1	  1	  1	  0
+!Installation 3:	  1	  0	  1	  1	  1	  1	  0
+!Installation 4:	  1	  0	  1	  1	  1	  1	  0
+!Installation 5:	  1	  0	  0	  1	  0	  0	  0
+!Installation 6:	  0	  1	  0	  0	  1	  0	  0
+!Installation 7:	  1	  1	  1	  1	  0	  1	  0
+!Installation 8:	  1	  1	  1	  1	  1	  1	  0
+!Installation 9:	  1	  1	  1	  1	  1	  1	  0
+!----------------------------------------------------------------------------
+!Gamma:
+
+!			Mon	Tue	Wed	Thu	Fri	Sat	Sun	
+!Installation 1:	  0	  0	  0	  0	  0	  0	  0
+!Installation 2:	  0	  0	  0	  0	  0	  0	  0
+!Installation 3:	  0	  0	  0	  0	  0	  0	  0
+!Installation 4:	  0	  0	  0	  0	  0	  0	  0
+!Installation 5:	  0	  0	  0	  0	  0	  0	  0
+!Installation 6:	  0	  0	  0	  0	  0	  0	  0
+!Installation 7:	  0	  0	  0	  0	  0	  0	  0
+!Installation 8:	  0	  0	  0	  0	  0	  0	  0
+!Installation 9:	  0	  0	  0	  0	  0	  0	  0
+!----------------------------------------------------------------------------
+!Number of Pareto-optimal solutions: 1
+!Pareto Front:
+63	0	949212	
+
+Total time elapsed: 1.17

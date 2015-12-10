@@ -19,6 +19,9 @@ public class VBMRunner
 	
 	static String[] inputDate;
 	static String[] problemInstance;
+	static String[] testCase;
+	static String[] baselineFile;
+	static int[] nNBaseline;
 	static int[] instancesToSolve;
 	static boolean[] useEpsilonConstraintMethod;
 	static boolean[] validInequalities;
@@ -74,9 +77,11 @@ public class VBMRunner
 	parameters += "InputDate = '" + inputDate[i] + "', ";
 	parameters += "ProblemInstance = '" + problemInstance[i] + "', ";
 	parameters += "DataFile = '" + dataFilePath + inputDate[i] + " " + problemInstance[i] + ".txt', ";
-	
+	parameters += "TestCase = '" + testCase[i] + "'";
 	parameters += "OptimalityGapLimit = " + optimalityGapLimit[i];
 	parameters += "UseEpsilonConstraintMethod = " + useEpsilonConstraintMethod[i] + ", ";
+	parameters += "BaselineFile = '" + baselineFilePath + baselineFile[i] + "', ";
+	parameters += "nNBaseline = " + nNBaseline[i];
 	parameters += "ValidInequalities = " + validInequalities[i] + ", ";
 	parameters += "SymmetryBreaking = " + symmetryBreaking[i] + ", ";
 	parameters += "VesselDom = " + vesselDom[i] + ", ";
@@ -118,8 +123,11 @@ public class VBMRunner
 	
 	inputDate = new String[numberOfProblems];
 	problemInstance = new String[numberOfProblems];
+	testCase = new String[numberOfProblems];
 	optimalityGapLimit = new double[numberOfProblems];
 	useEpsilonConstraintMethod = new boolean[numberOfProblems];
+	baselineFile = new String[numberOfProblems];
+	nNBaseline = new int[numberOfProblems];
 	validInequalities = new boolean[numberOfProblems];
 	symmetryBreaking = new boolean[numberOfProblems];
 	vesselDom = new boolean[numberOfProblems];
@@ -127,11 +135,14 @@ public class VBMRunner
 	for (int i = 0; i < numberOfProblems; i++){
 		inputDate[i] = sheet.getCell(1, 7+i).getContents();
 		problemInstance[i] = sheet.getCell(2, 7+i).getContents();
-		optimalityGapLimit[i] = Double.parseDouble(sheet.getCell(3, 7+i).getContents());
-		useEpsilonConstraintMethod[i] = Boolean.parseBoolean(sheet.getCell(4, 7+i).getContents());
-		validInequalities[i] = Boolean.parseBoolean(sheet.getCell(5, 7+i).getContents());
-		symmetryBreaking[i] = Boolean.parseBoolean(sheet.getCell(6, 7+i).getContents());
-		vesselDom[i] = Boolean.parseBoolean(sheet.getCell(7, 7+i).getContents());
+		testCase[i] = sheet.getCell(3, 7+i).getContents();
+		optimalityGapLimit[i] = Double.parseDouble(sheet.getCell(4, 7+i).getContents());
+		useEpsilonConstraintMethod[i] = Boolean.parseBoolean(sheet.getCell(5, 7+i).getContents());
+		baselineFile[i] = sheet.getCell(6, 7+i).getContents() + ".txt";
+		nNBaseline[i] = Integer.parseInt(sheet.getCell(7, 7+i).getContents());
+		validInequalities[i] = Boolean.parseBoolean(sheet.getCell(8, 7+i).getContents());
+		symmetryBreaking[i] = Boolean.parseBoolean(sheet.getCell(9, 7+i).getContents());
+		vesselDom[i] = Boolean.parseBoolean(sheet.getCell(10, 7+i).getContents());
 		
 	}
 	} catch (Exception e) {

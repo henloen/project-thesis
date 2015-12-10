@@ -1,26 +1,30 @@
-model VoyageBasedModel
+	model VoyageBasedModel
 uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 
 parameters
 	 ! Input file is specified here
 	 
-	 
-	 DataFilePath = '..\data\input\for report\'
-	 InputDate = '2015-12-07'
-	 ProblemInstance = '12-3-51 longestRemoved 10'
+	 DataFilePath = '..\data\input\standard input\'
+	 !DataFilePath = '..\data\input\minCap + longestRemoved\'
+	 !DataFilePath = '..\data\input\addVisits\'
+	 InputDate = '2015-11-13'
+	 !InputDate = '2015-12-07'
+	 ProblemInstance = '11-3-47'
 	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
+	 TestCase = 'add3visits'
 	 OutputFilePath = '..\data\output\'
 	 
+	 
+	 UseEpsilonConstraintMethod = true
 	 ! Input file containing baseline solution to compare new solution with
 	 BaselineFilePath = '..\data\input\baseline\'
-	 BaselineFile = BaselineFilePath + ProblemInstance + '_baseline.txt'
+	 BaselineFile = BaselineFilePath + '11-3-47_rem3visits.txt'
+	 nNBaseline = 11
 	 
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
-	 OptimalityGapLimit = 0;
-	 
-	 UseEpsilonConstraintMethod = false;
+	 OptimalityGapLimit = 0
 	 
 	 ! NB! Not valid to use symmetrybreaking when depot capacity varies from day to day
 	 SymmetryBreaking = false;
@@ -72,6 +76,7 @@ T := 0 .. nT-1; ! Zero-indexed due to use of modulus operator in spread of depar
 L := minL .. maxL;
 R := 1 .. nR;
 
+NBaseline := 1 .. nNBaseline;
 
 ParetoIndex := {'Epsilon', 'TotalChange', 'TotalCost'}; ! For indexing ParetoFront
 
@@ -102,7 +107,7 @@ declarations
 	DayNames: array(T) of string;
 	
 	! Epsilon-constraint: Baseline solution values
-	BaselineSigma: array(N, T) of integer; ! Sigma-values in baseline solutione
+	BaselineSigma: array(NBaseline, T) of integer; ! Sigma-values in baseline solutione
 	
 	! Epsilon-constraint: Variables
 	sigma: array(N, T) of mpvar; ! 1 if there is a departure to installation i on day t, 0 otherwise				
@@ -338,17 +343,17 @@ else
 		BaselineSigma;
 	end-initializations
 	
-	forall(ii in N, tt in T) do
+	forall(ii in N, tt in T | ii <= nNBaseline) do
 		create(sigma(ii, tt));
 		create(gamma(ii, tt));
 		sigma(ii, tt) is_binary;
 		gamma(ii, tt) is_binary;
-
-		
-		!setmipdir(gamma(ii, tt), XPRS_PR, 100);
 	end-do
-
-	forall(ii in N, tt in T) do
+	
+	
+	
+	
+	forall(ii in N, tt in T | ii <= nNBaseline) do
 		XToSigmaCon(ii, tt) := sigma(ii, tt) = sum(vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
 		SigmaToGammaCon1(ii, tt) := gamma(ii, tt) >= sigma(ii, tt)-BaselineSigma(ii, tt);
 		SigmaToGammaCon2(ii, tt) := gamma(ii, tt) >= BaselineSigma(ii, tt) - sigma(ii, tt);
@@ -364,6 +369,7 @@ else
 	CreateOutputFile;
 	fopen(OutputFile, F_OUTPUT + F_APPEND);	
 	writeln("Epsilon-constraint method");
+	writeln("Baseline file: " + BaselineFile + "\n");
 	
 	WriteProblemInfo;
 	
@@ -386,22 +392,26 @@ else
 		writeln("\n!----------------------------------------------------------------------------");
 		writeln("Iteration " + iteration + ": ");
 		writeln("Epsilon: " + Epsilon);
+		
+		if (getprobstat = XPRS_INF) then
+			writeln("\nNo feasible solution found");
+			break;
+		end-if
+		
 		writeln("Change: " + SolutionChange);
 		writeln("Total cost: " + (getobjval-getsol(Change)));
 		
 		WriteSolution;
 		writeln("!Change: " + string(getsol(Change)));
-		
-		!--------------Just for debugging------------------------------
-		!RealChange := sum(ii in N, tt in T) getsol(gamma(ii, tt));
-		!writeln("!Sum of gammas: " + string(RealChange));
-		!--------------------------------------------------------------
+				
 		
 		WriteVesselsUsed;
 		WriteVoyagesUsed;
 		!WriteBaselineDepartures;
 		WriteDepartures;
 		WriteGamma;
+		
+			
 		
 		if (SolutionChange = 0) then
 			break;
@@ -471,7 +481,7 @@ procedure CreateOutputFile
 		end-if
 		OutputFile := OutputFile + '.txt';
 	else 
-		OutputFile := OutputFilePath + 'epsilon\' + string(DateTime) + ' ' + ProblemInstance + '.txt';	
+		OutputFile := OutputFilePath + 'epsilon\' + string(DateTime) + ' ' + ProblemInstance + '_' + TestCase +  '.txt';	
 	end-if
 	writeln("Writing output to " + OutputFile);
 end-procedure
