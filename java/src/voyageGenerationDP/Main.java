@@ -23,7 +23,7 @@ public class Main {
 	private static String inputFileName = "data/input/Input data.xls",
 			outputFileName = "data/output/"; //sets the folder, see the constructor of IO for the filename format
 	//heuristic parameters
-	private static int removeLongestArcs = 0, minInstallationsHeur = 0, maxArcsRemovedInstallation = 2;
+	private static int removeLongestArcs = 10, minInstallationsHeur = 0, maxArcsRemovedInstallation = 2;
 	private static double capacityFraction = 0.8;
 	
 	public static void main(String[] args) {
