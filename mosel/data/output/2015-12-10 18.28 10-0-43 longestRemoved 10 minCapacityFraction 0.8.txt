@@ -1,0 +1,8 @@
+!Problem instance: 10-0-43 longestRemoved 10 minCapacityFraction 0.8
+!Total visits: 43
+!Solved on: 2015-12-10 18.28
+!Optimality gap: 
+
+No feasible solution found
+
+Total time elapsed: 0.499

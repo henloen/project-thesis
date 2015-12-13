@@ -6,13 +6,13 @@ parameters
 	 
 	 DataFilePath = '..\data\input\standard input\'
 	 !DataFilePath = '..\data\input\minCap + longestRemoved\'
-	 !DataFilePath = '..\data\input\addVisits\'
+	 !DataFilePath = '..\data\input\longestRemoved\'
 	 InputDate = '2015-11-13'
 	 !InputDate = '2015-12-07'
 	 ProblemInstance = '11-3-47'
 	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
-	 TestCase = 'add3visits'
+	
 	 OutputFilePath = '..\data\output\'
 	 
 	 
@@ -20,11 +20,13 @@ parameters
 	 ! Input file containing baseline solution to compare new solution with
 	 BaselineFilePath = '..\data\input\baseline\'
 	 BaselineFile = BaselineFilePath + '11-3-47_rem3visits.txt'
+	 TestCase = 'add3visits'
 	 nNBaseline = 11
 	 
 	 
 	 ! Solver will stop and accept current best solution when optimality gap is lower than the limit
 	 OptimalityGapLimit = 0
+	 Timeout = 3600
 	 
 	 ! NB! Not valid to use symmetrybreaking when depot capacity varies from day to day
 	 SymmetryBreaking = false;
@@ -40,7 +42,7 @@ writeln("UseEpsilon = " + UseEpsilonConstraintMethod);
 
 !Modify Optimizer control parameter MIPRELSTOP
 setparam("XPRS_MIPRELSTOP", OptimalityGapLimit);
-setparam("XPRS_MAXTIME", 3600);
+setparam("XPRS_MAXTIME", Timeout);
 setparam("XPRS_CPUTIME", 0); ! 0 - Reports actual time, 1- Reports CPU time
 	
 declarations
@@ -324,11 +326,18 @@ if (not UseEpsilonConstraintMethod) then ! Solve problem without considering cha
 
 	fopen(OutputFile, F_OUTPUT);	
 		WriteProblemInfo;
-		WriteSolution;
-		WriteVesselsUsed;
-		WriteVoyagesUsed;
-		WriteDepartures;
-		WriteBaselineSigma;
+		
+		if (getprobstat = XPRS_INF) then
+			writeln("\nNo feasible solution found");
+		
+		else
+			WriteSolution;
+			WriteVesselsUsed;
+			WriteVoyagesUsed;
+			WriteDepartures;
+			WriteBaselineSigma;					
+		end-if
+		
 		WriteElapsedTime;
 		
 	fclose(F_OUTPUT);
@@ -360,7 +369,7 @@ else
 	end-do
 	
 	
-	Change := sum(ii in N, tt in T) gamma(ii, tt);
+	Change := sum(ii in N, tt in T | ii <= nNBaseline) gamma(ii, tt);
 	
 	! =========================================================Objective function=====================================================================
 	
@@ -383,11 +392,13 @@ else
 		EpsilonCon := Change <= Epsilon;
 		minimize(TotalCost);
 		
-		SolutionChange := integer(getsol(Change));
+		UncastedSolutionChange := sum(ii in N, tt in T | ii <= nNBaseline) getsol(gamma(ii, tt));
 		
-		ParetoFront(iteration, 'Epsilon') := Epsilon;
-		ParetoFront(iteration, 'TotalCost') := getobjval-getsol(Change);
-		ParetoFront(iteration, 'TotalChange') := SolutionChange;
+		writeln("Uncasted change: " + UncastedSolutionChange);
+		
+		SolutionChange := integer(round(UncastedSolutionChange));
+		
+		writeln("Casted change: " + SolutionChange);
 		
 		writeln("\n!----------------------------------------------------------------------------");
 		writeln("Iteration " + iteration + ": ");
@@ -398,11 +409,18 @@ else
 			break;
 		end-if
 		
+		
+		ParetoFront(iteration, 'Epsilon') := Epsilon;
+		ParetoFront(iteration, 'TotalCost') := getobjval-SolutionChange;
+		ParetoFront(iteration, 'TotalChange') := SolutionChange;
+		
+
+		
 		writeln("Change: " + SolutionChange);
-		writeln("Total cost: " + (getobjval-getsol(Change)));
+		writeln("Calculated change: " +  sum(ii in N, tt in T | ii <= nNBaseline) getsol(gamma(ii, tt)));
+		writeln("Total cost: " + (getobjval-SolutionChange));
 		
 		WriteSolution;
-		writeln("!Change: " + string(getsol(Change)));
 				
 		
 		WriteVesselsUsed;
@@ -491,7 +509,6 @@ procedure WriteProblemInfo
 	writeln("!Problem instance: " + ProblemInstance);
 	writeln("!Total visits: " + nVisitsTotal);
 	writeln("!Solved on: " + DateTime);
-	writeln("!Optimality gap: ");
 end-procedure
 
 procedure WriteSolution
@@ -502,10 +519,16 @@ procedure WriteSolution
 	writeln("\n!----------------------------------------------------------------------------");
 	
 	if (not UseEpsilonConstraintMethod) then
-		writeln("!Objective value: " + getobjval);
+		SolTotalCost := getobjval;
 	else
-		writeln("!Objective value: " + (getobjval-getsol(Change)));
+		SolTotalCost := getobjval-getsol(Change);
 	end-if
+	
+	BestBound := getparam("XPRS_BESTBOUND");
+	OptimalityGap := (getobjval - BestBound)/getobjval;
+	
+	writeln("!Total cost: " + SolTotalCost);
+	writeln("!Optimality gap: " + OptimalityGap);
 	
 	writeln("!Charter cost:\t " + sum(vv in V) TimeCharterCost(vv)*getsol(delta(vv)));
 	writeln("!Sailing cost:\t " + sum(vv in V, rr in Rv(vv), tt in T) VoyageCost(rr) * getsol(x(vv,rr,tt))); 

@@ -28,6 +28,7 @@ public class VBMRunner
 	static boolean[] symmetryBreaking;
 	static boolean[] vesselDom;
 	static double[] optimalityGapLimit;
+	static int[] timeout;
 	
  public static void main(String[] args)
  {
@@ -77,16 +78,17 @@ public class VBMRunner
 	parameters += "InputDate = '" + inputDate[i] + "', ";
 	parameters += "ProblemInstance = '" + problemInstance[i] + "', ";
 	parameters += "DataFile = '" + dataFilePath + inputDate[i] + " " + problemInstance[i] + ".txt', ";
-	parameters += "TestCase = '" + testCase[i] + "'";
-	parameters += "OptimalityGapLimit = " + optimalityGapLimit[i];
+	parameters += "TestCase = '" + testCase[i] + "',";
+	parameters += "OptimalityGapLimit = " + optimalityGapLimit[i] + ", ";
 	parameters += "UseEpsilonConstraintMethod = " + useEpsilonConstraintMethod[i] + ", ";
 	parameters += "BaselineFile = '" + baselineFilePath + baselineFile[i] + "', ";
-	parameters += "nNBaseline = " + nNBaseline[i];
+	parameters += "nNBaseline = " + nNBaseline[i] + ", "	;
 	parameters += "ValidInequalities = " + validInequalities[i] + ", ";
 	parameters += "SymmetryBreaking = " + symmetryBreaking[i] + ", ";
 	parameters += "VesselDom = " + vesselDom[i] + ", ";
+	parameters += "Timeout = " + timeout[i];
 	
-	//System.out.println("Parameters: " + parameters);
+	// System.out.println("Parameters: " + parameters);
 
 	model.execParams = parameters; // Sets parameters in Xpress
 	
@@ -131,6 +133,7 @@ public class VBMRunner
 	validInequalities = new boolean[numberOfProblems];
 	symmetryBreaking = new boolean[numberOfProblems];
 	vesselDom = new boolean[numberOfProblems];
+	timeout = new int[numberOfProblems];
 	
 	for (int i = 0; i < numberOfProblems; i++){
 		inputDate[i] = sheet.getCell(1, 7+i).getContents();
@@ -143,6 +146,8 @@ public class VBMRunner
 		validInequalities[i] = Boolean.parseBoolean(sheet.getCell(8, 7+i).getContents());
 		symmetryBreaking[i] = Boolean.parseBoolean(sheet.getCell(9, 7+i).getContents());
 		vesselDom[i] = Boolean.parseBoolean(sheet.getCell(10, 7+i).getContents());
+		timeout[i] = Integer.parseInt(sheet.getCell(11, 7+i).getContents());
+		
 		
 	}
 	} catch (Exception e) {
