@@ -4,11 +4,8 @@ uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 parameters
 	 ! Input file is specified here
 	 
-	 DataFilePath = '..\data\input\standard input\'
-	 !DataFilePath = '..\data\input\minCap + longestRemoved\'
-	 !DataFilePath = '..\data\input\longestRemoved\'
+	 DataFilePath = '..\data\Standard input'
 	 InputDate = '2015-11-13'
-	 !InputDate = '2015-12-07'
 	 ProblemInstance = '11-3-47'
 	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
@@ -183,7 +180,8 @@ declarations
 	SpreadDeparturesMinCon: dynamic array(N, F, T) of linctr; ! (4.6) - Lower bound
 	SpreadDeparturesMaxCon: dynamic array(N, F, T) of linctr; ! (4.6) - Upper bound
 	OneDeparturePerDayCon: dynamic array(N, T) of linctr; ! (4.6) - Maximum one departure to an installation per day
-	! Symmetry-breaking constraints
+	
+	! Symmetry-breaking constraints - NOT USED
 	!SymmetryBreakingCon: dynamic array(T) of linctr; ! symmetry-breaking on the number of installations visited by voyages departing on a day
 				
 	! Epsilon-constraint
@@ -227,7 +225,8 @@ forall(ii in N, tt in T) do
 	OneDeparturePerDayCon(ii, tt) := sum(vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt) <= 1;
 end-do
 
-(! Based on assumption that the DepotCapacity is equal for every day
+(! Symmetry-breaking constraints - NOT USED
+Based on assumption that the DepotCapacity is equal for every day
 forall(tt in T | tt <> 6) do
 	SymmetryBreakingCon(tt) := sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, 6) <= sum(ii in N, vv in V, rr in Rvi(vv, ii)) x(vv, rr, tt);
 end-do 
@@ -269,12 +268,6 @@ if (SymmetryBreaking) then
 	
 	SymmetryBreakingCon := sum(vv in V, rr in Rvi(vv,minReqVisIns)) x(vv,rr,0) >= 1;
 
-	(!
-	writeln("Installation with fewest required visits is: ");
-	writeln(minReqVisIns);
-	writeln("With number of visits:");
-	writeln(minReqVis);
-	!)
 end-if
 
 ! Vessel domination
@@ -394,11 +387,8 @@ else
 		
 		UncastedSolutionChange := sum(ii in N, tt in T | ii <= nNBaseline) getsol(gamma(ii, tt));
 		
-		writeln("Uncasted change: " + UncastedSolutionChange);
-		
 		SolutionChange := integer(round(UncastedSolutionChange));
 		
-		writeln("Casted change: " + SolutionChange);
 		
 		writeln("\n!----------------------------------------------------------------------------");
 		writeln("Iteration " + iteration + ": ");
@@ -417,7 +407,6 @@ else
 
 		
 		writeln("Change: " + SolutionChange);
-		writeln("Calculated change: " +  sum(ii in N, tt in T | ii <= nNBaseline) getsol(gamma(ii, tt)));
 		writeln("Total cost: " + (getobjval-SolutionChange));
 		
 		WriteSolution;
@@ -440,40 +429,7 @@ else
 	end-do
 	
 	
-	! End-Adapted epsilon-constraint method
-		
-	(! =========================================================================================================================
-	
-	forall(iteration in 0..nIterations) do
-		Epsilon := iteration * EpsilonIncrement;
-		EpsilonCon := Change <= Epsilon;
-		writeln("\n!----------------------------------------------------------------------------");
-		writeln("!----------------------------------------------------------------------------");
-		writeln("!Iteration " + iteration + "...");
-		writeln("!Change constrained to " + Epsilon);
-		
-		minimize(TotalCost);
-		
-		ParetoFront(iteration, 'Epsilon') := Epsilon;
-		ParetoFront(iteration, 'TotalCost') := getobjval-getsol(Change);
-		ParetoFront(iteration, 'TotalChange') := getsol(Change);
-		
-		WriteSolution;
-		writeln("!Change: " + string(getsol(Change)));
-		RealChange := sum(ii in N, tt in T) getsol(gamma(ii, tt));
-		writeln("!Sum of gammas: " + string(RealChange));
-		WriteVesselsUsed;
-		WriteVoyagesUsed;
-		!WriteBaselineDepartures;
-		WriteDepartures;
-		WriteGamma;
-		
-	end-do
-	!)
-	! =========================================================================================================================
-	
-	WriteParetoFront;
-	!DrawParetoFront;	
+	WriteParetoFront;	
 	WriteElapsedTime;
 	
 	fclose(F_OUTPUT);
