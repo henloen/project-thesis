@@ -4,16 +4,16 @@ uses  "mmxprs", "mmsystem", "mmive"; ! Use Xpress-Optimizer
 parameters
 	 ! Input file is specified here
 	 
-	 DataFilePath = '..\data\Standard input'
+	 DataFilePath = '..\data\input\Standard input\daily charter cost\'
 	 InputDate = '2015-11-13'
-	 ProblemInstance = '11-3-47'
+	 ProblemInstance = '4-0-21 – Kopi'
 	 DataFile = DataFilePath + InputDate + " " + ProblemInstance + '.txt'
 	 
 	
 	 OutputFilePath = '..\data\output\'
 	 
 	 
-	 UseEpsilonConstraintMethod = true
+	 UseEpsilonConstraintMethod = false
 	 ! Input file containing baseline solution to compare new solution with
 	 BaselineFilePath = '..\data\input\baseline\'
 	 BaselineFile = BaselineFilePath + '11-3-47_rem3visits.txt'
